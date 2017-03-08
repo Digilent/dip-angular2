@@ -11,7 +11,7 @@ import { TriggerInstrumentComponent } from './instruments/trigger/trigger-instru
 import { GpioInstrumentComponent } from './instruments/gpio/gpio-instrument.service';
 
 //Services
-import { TransportService } from '../../services/transport/transport.service';
+import { TransportService } from '../transport/transport.service';
 
 @Injectable()
 export class DeviceComponent {
@@ -48,9 +48,6 @@ export class DeviceComponent {
         this.descriptorObject = deviceDescriptor;
         this.rootUri = _rootUri;
         this.transport = new TransportService(this.rootUri);
-        if (_rootUri === 'local') {
-            this.transport.setLocalTransport(deviceDescriptor);
-        }
         console.log(deviceDescriptor);
         this.deviceMake = deviceDescriptor.deviceMake;
         this.deviceModel = deviceDescriptor.deviceModel;

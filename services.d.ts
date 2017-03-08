@@ -1,1 +1,1 @@
-export * from './lib/services/device-manager.service';
+export * from './lib/device/device-manager.service';
