@@ -1,0 +1,1 @@
+exports.TestService = require('./lib/test.service').test.service;
