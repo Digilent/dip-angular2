@@ -113,6 +113,7 @@ export class DeviceService {
                 (arrayBuffer) => {
                     let firstChar = String.fromCharCode.apply(null, new Int8Array(arrayBuffer.slice(0, 1)));
                     if (!isNaN(parseInt(firstChar))) {
+                        //TODO switch to chunked transfer
                         //OSJB
                         //console.log('OSJB');
 
