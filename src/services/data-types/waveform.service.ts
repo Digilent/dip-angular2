@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 @Injectable()
-export class WaveformComponent {
+export class WaveformService {
 
     public t0: number;
     public dt: number;
@@ -17,7 +17,7 @@ export class WaveformComponent {
     constructor(wfDescOrT0: any | number, dt?: number, y?: Array<number>, pointOfInterest?: number, triggerPosition?: number, seriesOffset?: number) {
         if (typeof (wfDescOrT0) === 'number') {
             //Construct waveform from parameters
-            this.t0 = <number>wfDescOrT0; 
+            this.t0 = <number>wfDescOrT0;
             this.dt = dt;
             this.y = y;
         } else {

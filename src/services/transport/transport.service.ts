@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
 
-//Components
+//Services
 import { GenericTransportService } from './generic-transport.service';
 import { HttpTransportComponent } from './http-transport.service';
 

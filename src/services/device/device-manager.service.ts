@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
 
-//Components
-import { DeviceComponent } from './device.service';
+//Services
+import { DeviceService } from './device.service';
 
 //Services
 import { TransportService } from '../transport/transport.service';
@@ -13,7 +13,7 @@ export class DeviceManagerService {
 
     public transport: TransportService;
 
-    public devices: Array<DeviceComponent> = [];
+    public devices: Array<DeviceService> = [];
     public activeDeviceIndex: number;
 
     constructor() {
@@ -161,7 +161,7 @@ export class DeviceManagerService {
             this.activeDeviceIndex = deviceExistCheck;
             return;
         }
-        let dev = new DeviceComponent(uri, deviceDescriptor.device[0]);
+        let dev = new DeviceService(uri, deviceDescriptor.device[0]);
         this.activeDeviceIndex = this.devices.push(dev) - 1;
     }
 

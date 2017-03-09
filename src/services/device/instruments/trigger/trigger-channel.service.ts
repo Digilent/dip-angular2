@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 @Injectable()
-export class TriggerChannelComponent {
+export class TriggerChannelService {
 
-    constructor(triggerChannelDescriptor: any) {       
+    constructor(triggerChannelDescriptor: any) {
         console.log(triggerChannelDescriptor);
     }
 }

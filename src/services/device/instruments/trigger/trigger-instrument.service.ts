@@ -2,21 +2,21 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
 
-//Components
-import { InstrumentComponent } from '../generic-instrument.service';
-import { TriggerChannelComponent } from './trigger-channel.service';
-import { WaveformComponent } from '../../../data-types/waveform.service';
+//Services
+import { GenericInstrumentService } from '../generic-instrument.service';
+import { TriggerChannelService } from './trigger-channel.service';
+import { WaveformService } from '../../../data-types/waveform.service';
 
 //Services
 import { TransportService } from '../../../transport/transport.service';
 
 @Injectable()
-export class TriggerInstrumentComponent extends InstrumentComponent {
+export class TriggerInstrumentService extends GenericInstrumentService {
 
     public numChans: number;
     public numDataBuffers = 8;
-    public chans: TriggerChannelComponent[] = [];
-    public dataBuffer: Array<Array<WaveformComponent>> = [];
+    public chans: TriggerChannelService[] = [];
+    public dataBuffer: Array<Array<WaveformService>> = [];
     public dataBufferWriteIndex: number = 0;
     public dataBufferFillSize: number = 0;
     public activeBuffer: string = '0';

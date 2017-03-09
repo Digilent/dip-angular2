@@ -2,19 +2,19 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
 
-//Components
-import { AwgInstrumentComponent } from './instruments/awg/awg-instrument.service';
-import { DcInstrumentComponent } from './instruments/dc/dc-instrument.service';
-import { LaInstrumentComponent } from './instruments/la/la-instrument.service';
-import { OscInstrumentComponent } from './instruments/osc/osc-instrument.service';
-import { TriggerInstrumentComponent } from './instruments/trigger/trigger-instrument.service';
-import { GpioInstrumentComponent } from './instruments/gpio/gpio-instrument.service';
+//Services
+import { AwgInstrumentService } from './instruments/awg/awg-instrument.service';
+import { DcInstrumentService } from './instruments/dc/dc-instrument.service';
+import { LaInstrumentService } from './instruments/la/la-instrument.service';
+import { OscInstrumentService } from './instruments/osc/osc-instrument.service';
+import { TriggerInstrumentService } from './instruments/trigger/trigger-instrument.service';
+import { GpioInstrumentService } from './instruments/gpio/gpio-instrument.service';
 
 //Services
 import { TransportService } from '../transport/transport.service';
 
 @Injectable()
-export class DeviceComponent {
+export class DeviceService {
 
     public transport: TransportService;
     public descriptorObject: any;
@@ -23,12 +23,12 @@ export class DeviceComponent {
     public deviceModel: string;
     public firmwareVersion;
     public instruments: {
-        awg: AwgInstrumentComponent,
-        dc: DcInstrumentComponent,
-        la: LaInstrumentComponent,
-        osc: OscInstrumentComponent,
-        trigger: TriggerInstrumentComponent,
-        gpio: GpioInstrumentComponent
+        awg: AwgInstrumentService,
+        dc: DcInstrumentService,
+        la: LaInstrumentService,
+        osc: OscInstrumentService,
+        trigger: TriggerInstrumentService,
+        gpio: GpioInstrumentService
     } = {
         awg: null,
         dc: null,
@@ -52,12 +52,12 @@ export class DeviceComponent {
         this.deviceMake = deviceDescriptor.deviceMake;
         this.deviceModel = deviceDescriptor.deviceModel;
         this.firmwareVersion = deviceDescriptor.firmwareVersion;
-        this.instruments.awg = new AwgInstrumentComponent(this.transport, deviceDescriptor.awg);
-        this.instruments.dc = new DcInstrumentComponent(this.transport, deviceDescriptor.dc);
-        this.instruments.la = new LaInstrumentComponent(this.transport, deviceDescriptor.la);
-        this.instruments.osc = new OscInstrumentComponent(this.transport, deviceDescriptor.osc);
-        this.instruments.trigger = new TriggerInstrumentComponent(this.transport, 'deviceDescriptor.trigger');
-        this.instruments.gpio = new GpioInstrumentComponent(this.transport, deviceDescriptor.gpio);
+        this.instruments.awg = new AwgInstrumentService(this.transport, deviceDescriptor.awg);
+        this.instruments.dc = new DcInstrumentService(this.transport, deviceDescriptor.dc);
+        this.instruments.la = new LaInstrumentService(this.transport, deviceDescriptor.la);
+        this.instruments.osc = new OscInstrumentService(this.transport, deviceDescriptor.osc);
+        this.instruments.trigger = new TriggerInstrumentService(this.transport, 'deviceDescriptor.trigger');
+        this.instruments.gpio = new GpioInstrumentService(this.transport, deviceDescriptor.gpio);
     }
 
     /*getFirmwareVersions() {

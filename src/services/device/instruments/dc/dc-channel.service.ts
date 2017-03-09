@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 @Injectable()
-export class DcChannelComponent {
+export class DcChannelService {
 
     public voltageMin: number = 0;
     public voltageMax: number = 0;
@@ -16,7 +16,7 @@ export class DcChannelComponent {
         this.voltageMin = dcChannelDescriptor.voltageMin;
         this.voltageMax = dcChannelDescriptor.voltageMax;
         this.voltageIncrement = dcChannelDescriptor.voltageIncrement;
-        
+
         this.currentMin = dcChannelDescriptor.currentMin;
         this.currentMax = dcChannelDescriptor.currentMax;
         this.currentIncrement = dcChannelDescriptor.currentIncrement;

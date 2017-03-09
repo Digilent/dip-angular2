@@ -1,15 +1,15 @@
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
 
-//Components
-import {InstrumentComponent} from '../generic-instrument.service';
- 
 //Services
-import {TransportService} from '../../../transport/transport.service';
+import { GenericInstrumentService } from '../generic-instrument.service';
+
+//Services
+import { TransportService } from '../../../transport/transport.service';
 
 @Injectable()
-export class GpioInstrumentComponent extends InstrumentComponent {
+export class GpioInstrumentService extends GenericInstrumentService {
 
     public numChans: number;
     public sinkCurrentMax: number;
@@ -30,12 +30,12 @@ export class GpioInstrumentComponent extends InstrumentComponent {
         }
         chans.forEach((element, index, array) => {
             command.gpio[chans[index]] =
-            [
-                {
-                    "command": "setParameters",
-                    "direction": directions[index]
-                }
-            ]
+                [
+                    {
+                        "command": "setParameters",
+                        "direction": directions[index]
+                    }
+                ]
         });
         console.log(command);
         return super._genericResponseHandler(command);
@@ -81,11 +81,11 @@ export class GpioInstrumentComponent extends InstrumentComponent {
                     try {
                         data = JSON.parse(String.fromCharCode.apply(null, new Int8Array(arrayBuffer.slice(0))));
                     }
-                    catch(e) {
+                    catch (e) {
                         observer.error(e);
                         return;
                     }
-                    
+
                     for (let i = 0; i < chans.length; i++) {
                         if (data.gpio == undefined || data.gpio[chans[i]][0].statusCode > 0 || data.agent != undefined) {
                             console.log(data);

@@ -2,23 +2,23 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
 
-//Components
-import { InstrumentComponent } from '../generic-instrument.service';
-import { OscChannelComponent } from './osc-channel.service';
-import { WaveformComponent } from '../../../data-types/waveform.service';
+//Services
+import { GenericInstrumentService } from '../generic-instrument.service';
+import { OscChannelService } from './osc-channel.service';
+import { WaveformService } from '../../../data-types/waveform.service';
 
 //Services
 import { TransportService } from '../../../transport/transport.service';
 import { CommandUtilityService } from '../../../utilities/command-utility.service';
 
 @Injectable()
-export class OscInstrumentComponent extends InstrumentComponent {
+export class OscInstrumentService extends GenericInstrumentService {
 
     public numChans: number;
-    public chans: OscChannelComponent[] = [];
+    public chans: OscChannelService[] = [];
 
     public numDataBuffers = 8;
-    public dataBuffer: Array<Array<WaveformComponent>> = [];
+    public dataBuffer: Array<Array<WaveformService>> = [];
     public dataBufferWriteIndex: number = 0;
     public dataBufferFillSize: number = 0;
     public activeBuffer: string = '0';
@@ -35,7 +35,7 @@ export class OscInstrumentComponent extends InstrumentComponent {
         //Populate channels        
         for (let channel in _oscInstrumentDescriptor) {
             if (channel !== 'numChans') {
-                this.chans.push(new OscChannelComponent(_oscInstrumentDescriptor[channel]));
+                this.chans.push(new OscChannelService(_oscInstrumentDescriptor[channel]));
             }
         }
         for (let i = 0; i < this.numDataBuffers; i++) {
@@ -182,7 +182,7 @@ export class OscInstrumentComponent extends InstrumentComponent {
                                 for (let i = 0; i < scaledArray.length; i++) {
                                     pointContainer.push([i * dt - triggerPosition, scaledArray[i]]);
                                 }
-                                this.dataBuffer[this.dataBufferWriteIndex][parseInt(channel) - 1] = new WaveformComponent({
+                                this.dataBuffer[this.dataBufferWriteIndex][parseInt(channel) - 1] = new WaveformService({
                                     dt: 1 / (command.osc[channel][0].actualSampleFreq / 1000),
                                     t0: 0,
                                     y: scaledArray,

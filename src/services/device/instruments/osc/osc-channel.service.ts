@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 @Injectable()
-export class OscChannelComponent {
+export class OscChannelService {
 
     public effectiveBits: number;
     public bufferSizeMax: number;
@@ -16,8 +16,8 @@ export class OscChannelComponent {
     public delayMax: number;
     public delayMin: number;
 
-    constructor(oscChannelDescriptor: any) {       
-        
+    constructor(oscChannelDescriptor: any) {
+
         this.effectiveBits = oscChannelDescriptor.effectiveBits;
         this.bufferSizeMax = oscChannelDescriptor.bufferSizeMax;
         this.bufferDataType = oscChannelDescriptor.bufferDataType;
@@ -30,8 +30,8 @@ export class OscChannelComponent {
         this.gains = oscChannelDescriptor.gains;
         this.delayMax = oscChannelDescriptor.delayMax;
         this.delayMin = oscChannelDescriptor.delayMin;
-        
+
     }
 
-    
+
 }

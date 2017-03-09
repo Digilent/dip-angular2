@@ -1,12 +1,9 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 @Injectable()
-export class LaChannelComponent {
+export class LaChannelService {
 
-
-
-    constructor(_oscChannelDescriptor: any) {       
-        
+    constructor(_laChannelDescriptor: any) {
 
     }
 }

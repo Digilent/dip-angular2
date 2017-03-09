@@ -6,7 +6,7 @@ import 'rxjs/Rx';
 import { TransportService } from '../../transport/transport.service';
 
 @Injectable()
-export abstract class InstrumentComponent {
+export abstract class GenericInstrumentService {
 
     protected transport: TransportService;
 

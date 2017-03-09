@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
 
-//Components
-import { InstrumentComponent } from '../generic-instrument.service';
-import { AwgChannelComponent } from './awg-channel.service';
+//Services
+import { GenericInstrumentService } from '../generic-instrument.service';
+import { AwgChannelService } from './awg-channel.service';
 
 //Services
 import { TransportService } from '../../../transport/transport.service';
@@ -13,10 +13,10 @@ import { TransportService } from '../../../transport/transport.service';
 import { SettingsObject } from './awg-instrument.service';
 
 @Injectable()
-export class AwgInstrumentComponent extends InstrumentComponent {
+export class AwgInstrumentService extends GenericInstrumentService {
 
     public numChans: number;
-    public chans: Array<AwgChannelComponent> = [];
+    public chans: Array<AwgChannelService> = [];
 
     constructor(_transport: TransportService, _awgInstrumentDescriptor: any) {
         super(_transport, '/');
@@ -29,7 +29,7 @@ export class AwgInstrumentComponent extends InstrumentComponent {
         //Populate channels  
         for (let channel in _awgInstrumentDescriptor) {
             if (channel !== 'numChans') {
-                this.chans.push(new AwgChannelComponent(_awgInstrumentDescriptor[channel]));
+                this.chans.push(new AwgChannelService(_awgInstrumentDescriptor[channel]));
             }
         }
     }

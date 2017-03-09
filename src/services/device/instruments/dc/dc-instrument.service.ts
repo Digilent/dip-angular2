@@ -2,17 +2,17 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
 
-//Components
-import { InstrumentComponent } from '../generic-instrument.service';
-import { DcChannelComponent } from './dc-channel.service';
+//Services
+import { GenericInstrumentService } from '../generic-instrument.service';
+import { DcChannelService } from './dc-channel.service';
 
 //Services
 import { TransportService } from '../../../transport/transport.service';
 
 @Injectable()
-export class DcInstrumentComponent extends InstrumentComponent {
+export class DcInstrumentService extends GenericInstrumentService {
 
-    public chans: DcChannelComponent[] = [];
+    public chans: DcChannelService[] = [];
 
     constructor(_transport: TransportService, _dcInstrumentDescriptor: any) {
         super(_transport, '/');
@@ -24,7 +24,7 @@ export class DcInstrumentComponent extends InstrumentComponent {
         //Populate channels        
         for (let channel in _dcInstrumentDescriptor) {
             if (channel !== 'numChans') {
-                this.chans.push(new DcChannelComponent(_dcInstrumentDescriptor[channel]));
+                this.chans.push(new DcChannelService(_dcInstrumentDescriptor[channel]));
             }
         }
     }

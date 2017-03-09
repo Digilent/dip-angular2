@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 @Injectable()
-export class AwgChannelComponent {
+export class AwgChannelService {
 
     public signalTypes: string[];
     public signalFreqMin: number;
@@ -31,5 +31,5 @@ export class AwgChannelComponent {
         this.vOutMin = awgChannelDescriptor.vOutMin;
         this.vOutMax = awgChannelDescriptor.vOutMax;
     }
-    
+
 }

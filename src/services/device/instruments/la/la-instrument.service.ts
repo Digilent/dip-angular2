@@ -2,23 +2,23 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
 
-//Components
-import { LaChannelComponent } from './la-channel.service';
-import { InstrumentComponent } from '../generic-instrument.service';
-import { WaveformComponent } from '../../../data-types/waveform.service';
+//Services
+import { LaChannelService } from './la-channel.service';
+import { GenericInstrumentService } from '../generic-instrument.service';
+import { WaveformService } from '../../../data-types/waveform.service';
 
 //Services
 import { TransportService } from '../../../transport/transport.service';
 import { CommandUtilityService } from '../../../utilities/command-utility.service';
 
 @Injectable()
-export class LaInstrumentComponent extends InstrumentComponent {
+export class LaInstrumentService extends GenericInstrumentService {
 
     public numChans: number;
-    public chans: Array<LaChannelComponent> = [];
+    public chans: Array<LaChannelService> = [];
 
     public numDataBuffers = 8;
-    public dataBuffer: Array<Array<WaveformComponent>> = [];
+    public dataBuffer: Array<Array<WaveformService>> = [];
     public dataBufferWriteIndex: number = 0;
     public dataBufferFillSize: number = 0;
     public activeBuffer: string = '0';
@@ -34,7 +34,7 @@ export class LaInstrumentComponent extends InstrumentComponent {
         //Populate channels  
         for (let channel in _laInstrumentDescriptor) {
             if (channel !== 'numChans') {
-                this.chans.push(new LaChannelComponent(_laInstrumentDescriptor[channel]));
+                this.chans.push(new LaChannelService(_laInstrumentDescriptor[channel]));
             }
         }
 
@@ -137,7 +137,7 @@ export class LaInstrumentComponent extends InstrumentComponent {
                                     pointContainer.push([j * dt - triggerPosition, (andVal & untypedArray[j]) > 0 ? 1 : 0]);
                                 }
 
-                                this.dataBuffer[this.dataBufferWriteIndex][parseInt(channel) - 1] = new WaveformComponent({
+                                this.dataBuffer[this.dataBufferWriteIndex][parseInt(channel) - 1] = new WaveformService({
                                     dt: 1 / (command.la[channel][0].actualSampleFreq / 1000),
                                     t0: 0,
                                     y: channelsObject[channel],
