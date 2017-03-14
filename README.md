@@ -1,2 +1,2 @@
 # openscope-protocol-library
-OpenScope Protocol Angular2 Module
+Digilent Instrument Protocol Angular2 Module

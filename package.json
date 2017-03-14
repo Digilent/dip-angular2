@@ -1,7 +1,7 @@
 {
   "name": "openscope-protocol-library",
   "version": "0.1.0",
-  "description": "OpenScope Protocol Angular2 Module",
+  "description": "Digilent Instrument Protocol Angular2 Module",
   "main": "index.js",
   "scripts": {
     "build": "rm -rf lib && tsc -p src"
