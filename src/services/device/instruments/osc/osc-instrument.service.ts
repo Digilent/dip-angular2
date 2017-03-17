@@ -14,15 +14,14 @@ import { CommandUtilityService } from '../../../utilities/command-utility.servic
 @Injectable()
 export class OscInstrumentService extends GenericInstrumentService {
 
-    public numChans: number;
-    public chans: OscChannelService[] = [];
+    readonly numChans: number;
+    readonly chans: OscChannelService[] = [];
 
-    public numDataBuffers = 8;
-    public dataBuffer: Array<Array<WaveformService>> = [];
-    public dataBufferWriteIndex: number = 0;
-    public dataBufferFillSize: number = 0;
-    public activeBuffer: string = '0';
-    public commandUtilityService: CommandUtilityService;
+    readonly numDataBuffers = 8;
+    readonly dataBuffer: Array<Array<WaveformService>> = [];
+    private dataBufferWriteIndex: number = 0;
+    public dataBufferReadIndex: number = 0;
+    private commandUtilityService: CommandUtilityService;
 
     constructor(_transport: TransportContainerService, _oscInstrumentDescriptor: any) {
         super(_transport, '/');
@@ -44,17 +43,7 @@ export class OscInstrumentService extends GenericInstrumentService {
     }
 
     getCurrentState(chans: number[]) {
-        let command = {
-            osc: {}
-        };
-        chans.forEach((element, index, array) => {
-            command.osc[chans[index]] =
-                [
-                    {
-                        command: 'getCurrentState'
-                    }
-                ]
-        });
+        let command = this.getCurrentStateJson(chans);
         return super._genericResponseHandler(command);
     }
 
@@ -109,22 +98,7 @@ export class OscInstrumentService extends GenericInstrumentService {
             });
         }
 
-        let command = {
-            "osc": {}
-        }
-        chans.forEach((element, index, array) => {
-            command.osc[chans[index]] =
-                [
-                    {
-                        "command": "setParameters",
-                        "offset": offsets[index] * 1000,
-                        "gain": gains[index],
-                        "sampleFreq": Math.round(sampleFreqs[index] * 1000),
-                        "bufferSize": bufferSizes[index],
-                        "triggerDelay": Math.round(delays[index] * 1000000000000)
-                    }
-                ]
-        });
+        let command = this.setParametersJson(chans, offsets, gains, sampleFreqs, bufferSizes, delays);
         return super._genericResponseHandler(command);
     }
 
@@ -193,14 +167,8 @@ export class OscInstrumentService extends GenericInstrumentService {
                                     triggerDelay: command.osc[channel][0].triggerDelay
                                 });
                             }
+                            this.dataBufferReadIndex = this.dataBufferWriteIndex;
                             this.dataBufferWriteIndex = (this.dataBufferWriteIndex + 1) % this.numDataBuffers;
-                            if (this.dataBufferFillSize < this.numDataBuffers) {
-                                this.dataBufferFillSize++;
-                                this.activeBuffer = this.dataBufferFillSize.toString();
-                            }
-                            else {
-                                this.activeBuffer = (this.numDataBuffers).toString();
-                            }
                             let finish = performance.now();
                             console.log('parse time: ' + (finish - start));
                             observer.next(command);

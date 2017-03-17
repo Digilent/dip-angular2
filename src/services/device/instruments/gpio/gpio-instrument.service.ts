@@ -11,9 +11,9 @@ import { TransportContainerService } from '../../../transport/transport-containe
 @Injectable()
 export class GpioInstrumentService extends GenericInstrumentService {
 
-    public numChans: number;
-    public sinkCurrentMax: number;
-    public sourceCurrentMax: number;
+    readonly numChans: number;
+    readonly sinkCurrentMax: number;
+    readonly sourceCurrentMax: number;
 
     constructor(_transport: TransportContainerService, _gpioInstrumentDescriptor: any) {
         super(_transport, '/');

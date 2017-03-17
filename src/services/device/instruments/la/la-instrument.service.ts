@@ -14,15 +14,14 @@ import { CommandUtilityService } from '../../../utilities/command-utility.servic
 @Injectable()
 export class LaInstrumentService extends GenericInstrumentService {
 
-    public numChans: number;
-    public chans: Array<LaChannelService> = [];
+    readonly numChans: number;
+    readonly chans: Array<LaChannelService> = [];
 
-    public numDataBuffers = 8;
-    public dataBuffer: Array<Array<WaveformService>> = [];
-    public dataBufferWriteIndex: number = 0;
-    public dataBufferFillSize: number = 0;
-    public activeBuffer: string = '0';
-    public commandUtilityService: CommandUtilityService;
+    readonly numDataBuffers = 8;
+    readonly dataBuffer: Array<WaveformService[]> = [];
+    private dataBufferWriteIndex: number = 0;
+    public dataBufferReadIndex: number = 0;
+    private commandUtilityService: CommandUtilityService;
 
     constructor(_transport: TransportContainerService, _laInstrumentDescriptor: any) {
         super(_transport, '/')
@@ -72,19 +71,7 @@ export class LaInstrumentService extends GenericInstrumentService {
             });
         }
 
-        let command = {
-            "la": {}
-        }
-        chans.forEach((element, index, array) => {
-            command.la[chans[index]] =
-                [
-                    {
-                        "command": "setParameters",
-                        "sampleFreq": sampleFreqs[index] * 1000,
-                        "bufferSize": bufferSizes[index]
-                    }
-                ]
-        });
+        let command = this.setParametersJson(chans, sampleFreqs, bufferSizes);
         return super._genericResponseHandler(command);
     }
 
@@ -144,17 +131,12 @@ export class LaInstrumentService extends GenericInstrumentService {
                                     data: pointContainer,
                                     pointOfInterest: command.la[channel][0].pointOfInterest,
                                     triggerPosition: command.la[channel][0].triggerIndex,
-                                    seriesOffset: 0.5
+                                    seriesOffset: 0.5,
+                                    triggerDelay: null
                                 });
                             }
+                            this.dataBufferReadIndex = this.dataBufferWriteIndex;
                             this.dataBufferWriteIndex = (this.dataBufferWriteIndex + 1) % this.numDataBuffers;
-                            if (this.dataBufferFillSize < this.numDataBuffers) {
-                                this.dataBufferFillSize++;
-                                this.activeBuffer = this.dataBufferFillSize.toString();
-                            }
-                            else {
-                                this.activeBuffer = (this.numDataBuffers).toString();
-                            }
                             let finish = performance.now();
                             console.log('Time: ' + (finish - start));
                             console.log(channelsObject);

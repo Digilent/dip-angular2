@@ -3,18 +3,18 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class AwgChannelService {
 
-    public signalTypes: string[];
-    public signalFreqMin: number;
-    public signalFreqMax: number;
-    public dataType: string;
-    public bufferSizeMax: number;
-    public dacVpp: number;
-    public dtMin: number;
-    public dtMax: number;
-    public vOffsetMin: number;
-    public vOffsetMax: number;
-    public vOutMin: number;
-    public vOutMax: number;
+    readonly signalTypes: string[];
+    readonly signalFreqMin: number;
+    readonly signalFreqMax: number;
+    readonly dataType: string;
+    readonly bufferSizeMax: number;
+    readonly dacVpp: number;
+    readonly dtMin: number;
+    readonly dtMax: number;
+    readonly vOffsetMin: number;
+    readonly vOffsetMax: number;
+    readonly vOutMin: number;
+    readonly vOutMax: number;
 
     constructor(awgChannelDescriptor: any) {
 

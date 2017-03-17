@@ -11,7 +11,7 @@ export abstract class GenericInstrumentService {
     protected transport: TransportContainerService;
 
     protected endpoint: string = '';
-    public numChans: number;
+    abstract numChans: number;
 
     constructor(_transport: TransportContainerService, _endpoint: string) {
         console.log('Generic Instrument Contructor');

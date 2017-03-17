@@ -13,13 +13,8 @@ import { TransportContainerService } from '../../../transport/transport-containe
 @Injectable()
 export class TriggerInstrumentService extends GenericInstrumentService {
 
-    public numChans: number;
-    public numDataBuffers = 8;
-    public chans: TriggerChannelService[] = [];
-    public dataBuffer: Array<Array<WaveformService>> = [];
-    public dataBufferWriteIndex: number = 0;
-    public dataBufferFillSize: number = 0;
-    public activeBuffer: string = '0';
+    readonly numChans: number;
+    readonly chans: TriggerChannelService[] = [];
 
 
     constructor(_transport: TransportContainerService, _triggerInstrumentDescriptor: any) {
@@ -28,11 +23,6 @@ export class TriggerInstrumentService extends GenericInstrumentService {
 
         //Populate DC supply parameters
         //this.numChans = _triggerInstrumentDescriptor.numChans;
-
-        //Initialize Data Buffers
-        for (let i = 0; i < this.numDataBuffers; i++) {
-            this.dataBuffer.push(Array(this.numChans));
-        }
 
         //Populate channels        
         /*for (let channel in _triggerInstrumentDescriptor) {
@@ -70,34 +60,12 @@ export class TriggerInstrumentService extends GenericInstrumentService {
             });
         }
 
-        let command = {
-            "trigger": {}
-        }
-        chans.forEach((element, index, array) => {
-            command.trigger[chans[index]] =
-                [
-                    {
-                        "command": "setParameters",
-                        "source": sources[index],
-                        "targets": targetsArray[index]
-                    }
-                ]
-        });
+        let command = this.setParametersJson(chans, sources, targetsArray);
         return super._genericResponseHandler(command);
     }
 
     getCurrentState(chans: number[]) {
-        let command = {
-            trigger: {}
-        };
-        chans.forEach((element, index, array) => {
-            command.trigger[chans[index]] =
-                [
-                    {
-                        command: 'getCurrentState'
-                    }
-                ]
-        });
+        let command = this.getCurrentStateJson(chans);
         return super._genericResponseHandler(command);
     }
 
@@ -147,17 +115,7 @@ export class TriggerInstrumentService extends GenericInstrumentService {
             });
         }
 
-        let command = {
-            "trigger": {}
-        }
-        chans.forEach((element, index, array) => {
-            command.trigger[chans[index]] =
-                [
-                    {
-                        "command": "single"
-                    }
-                ]
-        });
+        let command = this.singleJson(chans);
         return super._genericResponseHandler(command);
     }
 
@@ -217,17 +175,7 @@ export class TriggerInstrumentService extends GenericInstrumentService {
             });
         }
 
-        let command = {
-            "trigger": {}
-        }
-        chans.forEach((element, index, array) => {
-            command.trigger[chans[index]] =
-                [
-                    {
-                        "command": "forceTrigger"
-                    }
-                ]
-        });
+        let command = this.forceTriggerJson(chans);
         return super._genericResponseHandler(command);
     }
 

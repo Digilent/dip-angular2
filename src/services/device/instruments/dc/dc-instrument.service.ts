@@ -12,7 +12,8 @@ import { TransportContainerService } from '../../../transport/transport-containe
 @Injectable()
 export class DcInstrumentService extends GenericInstrumentService {
 
-    public chans: DcChannelService[] = [];
+    readonly chans: DcChannelService[] = [];
+    readonly numChans: number;
 
     constructor(_transport: TransportContainerService, _dcInstrumentDescriptor: any) {
         super(_transport, '/');
@@ -22,14 +23,12 @@ export class DcInstrumentService extends GenericInstrumentService {
         this.numChans = _dcInstrumentDescriptor.numChans;
 
         //Populate channels        
-        for (let channel in _dcInstrumentDescriptor) {
-            if (channel !== 'numChans') {
-                this.chans.push(new DcChannelService(_dcInstrumentDescriptor[channel]));
+        for (let key in _dcInstrumentDescriptor) {
+            if (key !== 'numChans') {
+                this.chans.push(new DcChannelService(_dcInstrumentDescriptor[key]));
             }
         }
     }
-
-    //TODO - Calibrate the DC power supply.
 
     //Get the output voltage(s) of the specified DC power supply channel(s).
     getVoltagesJson(chans) {
@@ -63,7 +62,7 @@ export class DcInstrumentService extends GenericInstrumentService {
                 [
                     {
                         "command": "setVoltage",
-                        "voltage": (element * 1000)
+                        "voltage": Math.round(element * 1000)
                     }
                 ]
         });
@@ -75,17 +74,7 @@ export class DcInstrumentService extends GenericInstrumentService {
     }
 
     getVoltages(chans: Array<number>): Observable<any> {
-        let command = {
-            "dc": {}
-        }
-        chans.forEach((element, index, array) => {
-            command.dc[chans[index]] =
-                [
-                    {
-                        "command": "getVoltage"
-                    }
-                ]
-        });
+        let command = this.getVoltagesJson(chans);
         return Observable.create((observer) => {
             super._genericResponseHandler(command).subscribe(
                 (data) => {
@@ -112,26 +101,12 @@ export class DcInstrumentService extends GenericInstrumentService {
 
     //Set the output voltage of the specified DC power supply channel.
     setVoltages(chans: Array<number>, voltages: Array<number>) {
-        //Scale voltages into mV before sending
-        let scaledVoltages = [];
-        let command = {
-            "dc": {}
-        }
-        voltages.forEach((element, index, array) => {
-            scaledVoltages.push(element * 1000);
-            command.dc[chans[index]] =
-                [
-                    {
-                        "command": "setVoltage",
-                        "voltage": (element * 1000)
-                    }
-                ]
-        });
+        let command = this.setVoltagesJson(chans, voltages);
         return super._genericResponseHandler(command);
     }
 
     //Streaming read voltages from the specified channel(s)
-    streamReadVoltages(chans: Array<number>, delay = 0): Observable<Array<number>> {
+    private streamReadVoltages(chans: Array<number>, delay = 0): Observable<Array<number>> {
         let command = {
             command: "dcGetVoltages",
             chans: chans
@@ -166,7 +141,7 @@ export class DcInstrumentService extends GenericInstrumentService {
     }
 
     //Stop the current stream
-    stopStream() {
+    private stopStream() {
         this.transport.stopStream();
     }
 }

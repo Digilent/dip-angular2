@@ -3,18 +3,18 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class OscChannelService {
 
-    public effectiveBits: number;
-    public bufferSizeMax: number;
-    public bufferDataType: string;
-    public resolution: number;
-    public sampleFreqMin: number;
-    public sampleFreqMax: number;
-    public adcVpp: number;
-    public inputVoltageMax: number;
-    public inputVoltageMin: number;
-    public gains: number[];
-    public delayMax: number;
-    public delayMin: number;
+    readonly effectiveBits: number;
+    readonly bufferSizeMax: number;
+    readonly bufferDataType: string;
+    readonly resolution: number;
+    readonly sampleFreqMin: number;
+    readonly sampleFreqMax: number;
+    readonly adcVpp: number;
+    readonly inputVoltageMax: number;
+    readonly inputVoltageMin: number;
+    readonly gains: number[];
+    readonly delayMax: number;
+    readonly delayMin: number;
 
     constructor(oscChannelDescriptor: any) {
 

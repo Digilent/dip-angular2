@@ -15,30 +15,26 @@ import { SettingsObject } from './awg-instrument.service';
 @Injectable()
 export class AwgInstrumentService extends GenericInstrumentService {
 
-    public numChans: number;
-    public chans: Array<AwgChannelService> = [];
+    readonly numChans: number;
+    readonly chans: Array<AwgChannelService> = [];
 
     constructor(_transport: TransportContainerService, _awgInstrumentDescriptor: any) {
         super(_transport, '/');
 
-        //Store reference to device transport for communication with device
-        this.transport = _transport;
-
         //Populate AWG supply parameters
         this.numChans = _awgInstrumentDescriptor.numChans;
         //Populate channels  
-        for (let channel in _awgInstrumentDescriptor) {
-            if (channel !== 'numChans') {
-                this.chans.push(new AwgChannelService(_awgInstrumentDescriptor[channel]));
+        for (let key in _awgInstrumentDescriptor) {
+            if (key !== 'numChans') {
+                this.chans.push(new AwgChannelService(_awgInstrumentDescriptor[key]));
             }
         }
     }
 
-    setArbitraryWaveform(chans: number[], waveforms: Array<any>, dataTypes: string[]): Observable<any> {
+    private setArbitraryWaveform(chans: number[], waveforms: Array<any>, dataTypes: string[]): Observable<any> {
         let command = {
             "awg": {}
         }
-        console.log(waveforms);
         let binaryOffset = 0;
         let binaryLength = 0;
         chans.forEach((element, index, array) => {

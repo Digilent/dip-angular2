@@ -3,13 +3,12 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class DcChannelService {
 
-    public voltageMin: number = 0;
-    public voltageMax: number = 0;
-    public voltageIncrement: number = 0;
-
-    public currentMin: number = 0;
-    public currentMax: number = 0;
-    public currentIncrement: number = 0;
+    readonly voltageMin: number = 0;
+    readonly voltageMax: number = 0;
+    readonly voltageIncrement: number = 0;
+    readonly currentMin: number = 0;
+    readonly currentMax: number = 0;
+    readonly currentIncrement: number = 0;
 
     constructor(dcChannelDescriptor: any) {
 
