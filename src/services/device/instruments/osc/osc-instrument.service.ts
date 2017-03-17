@@ -8,7 +8,7 @@ import { OscChannelService } from './osc-channel.service';
 import { WaveformService } from '../../../data-types/waveform.service';
 
 //Services
-import { TransportService } from '../../../transport/transport.service';
+import { TransportContainerService } from '../../../transport/transport-container.service';
 import { CommandUtilityService } from '../../../utilities/command-utility.service';
 
 @Injectable()
@@ -24,7 +24,7 @@ export class OscInstrumentService extends GenericInstrumentService {
     public activeBuffer: string = '0';
     public commandUtilityService: CommandUtilityService;
 
-    constructor(_transport: TransportService, _oscInstrumentDescriptor: any) {
+    constructor(_transport: TransportContainerService, _oscInstrumentDescriptor: any) {
         super(_transport, '/');
         console.log('OSC Instrument Constructor');
 

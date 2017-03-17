@@ -8,7 +8,7 @@ import { TriggerChannelService } from './trigger-channel.service';
 import { WaveformService } from '../../../data-types/waveform.service';
 
 //Services
-import { TransportService } from '../../../transport/transport.service';
+import { TransportContainerService } from '../../../transport/transport-container.service';
 
 @Injectable()
 export class TriggerInstrumentService extends GenericInstrumentService {
@@ -22,7 +22,7 @@ export class TriggerInstrumentService extends GenericInstrumentService {
     public activeBuffer: string = '0';
 
 
-    constructor(_transport: TransportService, _triggerInstrumentDescriptor: any) {
+    constructor(_transport: TransportContainerService, _triggerInstrumentDescriptor: any) {
         super(_transport, '/');
         console.log('Trigger Instrument Constructor');
 

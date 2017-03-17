@@ -6,7 +6,7 @@ import 'rxjs/Rx';
 import { GenericInstrumentService } from '../generic-instrument.service';
 
 //Services
-import { TransportService } from '../../../transport/transport.service';
+import { TransportContainerService } from '../../../transport/transport-container.service';
 
 @Injectable()
 export class GpioInstrumentService extends GenericInstrumentService {
@@ -15,7 +15,7 @@ export class GpioInstrumentService extends GenericInstrumentService {
     public sinkCurrentMax: number;
     public sourceCurrentMax: number;
 
-    constructor(_transport: TransportService, _gpioInstrumentDescriptor: any) {
+    constructor(_transport: TransportContainerService, _gpioInstrumentDescriptor: any) {
         super(_transport, '/');
 
         //Populate LA supply parameters

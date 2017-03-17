@@ -30,6 +30,7 @@ export class CommandUtilityService {
             }
             catch (e) {
                 reject(e);
+                return;
             }
             currentReadIndex = currentReadIndex + chunkLength + 2;
             console.log(currentReadIndex);
@@ -39,7 +40,14 @@ export class CommandUtilityService {
             currentReadIndex = chunkInfo.endingIndex;
             console.log(currentReadIndex, chunkLength);
             console.log
-            let typedArray = new Int16Array(data.slice(currentReadIndex, currentReadIndex + chunkLength));
+            let typedArray;
+            try {
+                typedArray = new Int16Array(data.slice(currentReadIndex, currentReadIndex + chunkLength));
+            }
+            catch(e) {
+                reject(e);
+                return;
+            }
             resolve({
                 json: jsonPortion,
                 typedArray: typedArray
@@ -66,12 +74,20 @@ export class CommandUtilityService {
             }
             catch (e) {
                 observer.error(e);
+                return;
             }
             currentReadIndex = currentReadIndex + chunkLength + 2;
             chunkInfo = this._findNewLineChar(chunkGuardLength, data, currentReadIndex);
             chunkLength = this._getChunkLength(chunkInfo.stringBuffer);
             currentReadIndex = chunkInfo.endingIndex;
-            let typedArray = new Int16Array(data.slice(currentReadIndex, currentReadIndex + chunkLength));
+            let typedArray;
+            try {
+                typedArray = new Int16Array(data.slice(currentReadIndex, currentReadIndex + chunkLength));
+            }
+            catch(e) {
+                observer.error(e);
+                return;
+            }
             let finish = performance.now();
             console.log('in function parse time: ' + (finish - start));
             observer.next({
@@ -82,11 +98,11 @@ export class CommandUtilityService {
         });
     }
 
-    _getChunkLength(chunkString: string) {
+    private _getChunkLength(chunkString: string) {
         return parseInt(chunkString, 16);
     }
 
-    _findNewLineChar(maxLength: number, data: ArrayBuffer, startIndex: number) {
+    private _findNewLineChar(maxLength: number, data: ArrayBuffer, startIndex: number) {
         let char = '';
         let i = startIndex;
         maxLength = maxLength + i;

@@ -7,14 +7,14 @@ import { GenericInstrumentService } from '../generic-instrument.service';
 import { DcChannelService } from './dc-channel.service';
 
 //Services
-import { TransportService } from '../../../transport/transport.service';
+import { TransportContainerService } from '../../../transport/transport-container.service';
 
 @Injectable()
 export class DcInstrumentService extends GenericInstrumentService {
 
     public chans: DcChannelService[] = [];
 
-    constructor(_transport: TransportService, _dcInstrumentDescriptor: any) {
+    constructor(_transport: TransportContainerService, _dcInstrumentDescriptor: any) {
         super(_transport, '/');
         console.log('DC Instrument Constructor');
 

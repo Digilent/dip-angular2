@@ -3,17 +3,17 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
 
 //Services
-import { TransportService } from '../../transport/transport.service';
+import { TransportContainerService } from '../../transport/transport-container.service';
 
 @Injectable()
 export abstract class GenericInstrumentService {
 
-    protected transport: TransportService;
+    protected transport: TransportContainerService;
 
     protected endpoint: string = '';
     public numChans: number;
 
-    constructor(_transport: TransportService, _endpoint: string) {
+    constructor(_transport: TransportContainerService, _endpoint: string) {
         console.log('Generic Instrument Contructor');
         this.transport = _transport;
         this.endpoint = _endpoint;

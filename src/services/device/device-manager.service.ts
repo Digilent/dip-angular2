@@ -6,19 +6,19 @@ import 'rxjs/Rx';
 import { DeviceService } from './device.service';
 
 //Services
-import { TransportService } from '../transport/transport.service';
+import { TransportContainerService } from '../transport/transport-container.service';
 
 @Injectable()
 export class DeviceManagerService {
 
-    public transport: TransportService;
+    public transport: TransportContainerService;
 
     public devices: Array<DeviceService> = [];
     public activeDeviceIndex: number;
 
     constructor() {
         console.log('Device Manager Service Constructor');
-        this.transport = new TransportService(null);
+        this.transport = new TransportContainerService(null);
     }
 
     //Connect to device and send enumerate command

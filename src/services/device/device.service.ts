@@ -11,12 +11,12 @@ import { TriggerInstrumentService } from './instruments/trigger/trigger-instrume
 import { GpioInstrumentService } from './instruments/gpio/gpio-instrument.service';
 
 //Services
-import { TransportService } from '../transport/transport.service';
+import { TransportContainerService } from '../transport/transport-container.service';
 
 @Injectable()
 export class DeviceService {
 
-    public transport: TransportService;
+    public transport: TransportContainerService;
     public descriptorObject: any;
     public rootUri: string;
     public deviceMake: string;
@@ -47,7 +47,7 @@ export class DeviceService {
 
         this.descriptorObject = deviceDescriptor;
         this.rootUri = _rootUri;
-        this.transport = new TransportService(this.rootUri);
+        this.transport = new TransportContainerService(this.rootUri);
         console.log(deviceDescriptor);
         this.deviceMake = deviceDescriptor.deviceMake;
         this.deviceModel = deviceDescriptor.deviceModel;

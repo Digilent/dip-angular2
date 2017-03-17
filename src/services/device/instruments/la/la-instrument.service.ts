@@ -8,7 +8,7 @@ import { GenericInstrumentService } from '../generic-instrument.service';
 import { WaveformService } from '../../../data-types/waveform.service';
 
 //Services
-import { TransportService } from '../../../transport/transport.service';
+import { TransportContainerService } from '../../../transport/transport-container.service';
 import { CommandUtilityService } from '../../../utilities/command-utility.service';
 
 @Injectable()
@@ -24,7 +24,7 @@ export class LaInstrumentService extends GenericInstrumentService {
     public activeBuffer: string = '0';
     public commandUtilityService: CommandUtilityService;
 
-    constructor(_transport: TransportService, _laInstrumentDescriptor: any) {
+    constructor(_transport: TransportContainerService, _laInstrumentDescriptor: any) {
         super(_transport, '/')
 
         //Populate LA supply parameters

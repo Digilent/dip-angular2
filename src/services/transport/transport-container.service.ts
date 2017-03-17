@@ -7,7 +7,7 @@ import { GenericTransportService } from './generic-transport.service';
 import { HttpTransportComponent } from './http-transport.service';
 
 @Injectable()
-export class TransportService {
+export class TransportContainerService {
     public transport: GenericTransportService;
 
     constructor(_uri: string) {

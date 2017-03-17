@@ -7,7 +7,7 @@ import { GenericInstrumentService } from '../generic-instrument.service';
 import { AwgChannelService } from './awg-channel.service';
 
 //Services
-import { TransportService } from '../../../transport/transport.service';
+import { TransportContainerService } from '../../../transport/transport-container.service';
 
 //Interfaces
 import { SettingsObject } from './awg-instrument.service';
@@ -18,7 +18,7 @@ export class AwgInstrumentService extends GenericInstrumentService {
     public numChans: number;
     public chans: Array<AwgChannelService> = [];
 
-    constructor(_transport: TransportService, _awgInstrumentDescriptor: any) {
+    constructor(_transport: TransportContainerService, _awgInstrumentDescriptor: any) {
         super(_transport, '/');
 
         //Store reference to device transport for communication with device
