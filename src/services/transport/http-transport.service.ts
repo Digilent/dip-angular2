@@ -6,7 +6,7 @@ import 'rxjs/Rx';
 import { GenericTransportService } from './generic-transport.service';
 
 @Injectable()
-export class HttpTransportComponent extends GenericTransportService {
+export class HttpTransportService extends GenericTransportService {
 
     private streamState: {
         mode: string,

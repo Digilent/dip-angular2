@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
 
-//Components
+//Services
 import { GenericTransportService } from './generic-transport.service';
 import { SimulatedDeviceService } from '../simulated-device/simulated-device.service';
 
 @Injectable()
-export class LocalTransportComponent extends GenericTransportService {
+export class LocalTransportService extends GenericTransportService {
 
     public streamState: {
         mode: string,

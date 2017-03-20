@@ -47,6 +47,9 @@ export class DeviceService {
         this.descriptorObject = deviceDescriptor;
         this.rootUri = _rootUri;
         this.transport = new TransportContainerService(this.rootUri);
+        if (_rootUri === 'local') {
+            this.transport.setLocalTransport(deviceDescriptor);
+        }
         this.deviceMake = deviceDescriptor.deviceMake;
         this.deviceModel = deviceDescriptor.deviceModel;
         this.firmwareVersion = deviceDescriptor.firmwareVersion;
