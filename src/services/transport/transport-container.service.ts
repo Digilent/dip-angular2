@@ -5,6 +5,7 @@ import 'rxjs/Rx';
 //Services
 import { GenericTransportService } from './generic-transport.service';
 import { HttpTransportComponent } from './http-transport.service';
+import { LocalTransportComponent } from './local-transport.service';
 
 @Injectable()
 export class TransportContainerService {
@@ -52,5 +53,10 @@ export class TransportContainerService {
     setHttpTransport(uri) {
         delete this.transport;
         this.transport = new HttpTransportComponent(uri);
+    }
+
+    setLocalTransport(deviceEnumeration: string) {
+        delete this.transport;
+        this.transport = new LocalTransportComponent(deviceEnumeration);
     }
 }
