@@ -221,7 +221,7 @@ export class DeviceManagerService {
         return arrayToSort;
     }
 
-    private getLatestFirmwareVersionFromArray(firmwareVersionsArray: string[]) {
+    getLatestFirmwareVersionFromArray(firmwareVersionsArray: string[]) {
         firmwareVersionsArray.sort((a, b) => {
             let aSplit = a.split('.');
             let bSplit = b.split('.');
