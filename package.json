@@ -1,6 +1,6 @@
 {
   "name": "dip-angular2",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Digilent Instrument Protocol Angular2 Module",
   "main": "index.js",
   "scripts": {
