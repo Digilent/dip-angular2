@@ -17,3 +17,13 @@ export * from './lib/transport/generic-transport.service';
 export * from './lib/transport/http-transport.service';
 export * from './lib/transport/transport-container.service';
 export * from './lib/utilities/command-utility.service';
+
+//Simulated device
+export * from './lib/simulated-device/simulated-device.service';
+export * from './lib/simulated-device/simulated-device-helper.service';
+export * from './lib/simulated-device/instruments/simulated-awg.service';
+export * from './lib/simulated-device/instruments/simulated-dc.service';
+export * from './lib/simulated-device/instruments/simulated-gpio.service';
+export * from './lib/simulated-device/instruments/simulated-la.service';
+export * from './lib/simulated-device/instruments/simulated-osc.service';
+export * from './lib/simulated-device/instruments/simulated-trigger.service';
