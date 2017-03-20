@@ -43,12 +43,10 @@ export class DeviceService {
 
     constructor(_rootUri: string, deviceDescriptor: any) {
         console.log('Device Contructor');
-        //TODO If deviceDescriptor is empty, attempt to enumerate the deviceDescriptor [?]
 
         this.descriptorObject = deviceDescriptor;
         this.rootUri = _rootUri;
         this.transport = new TransportContainerService(this.rootUri);
-        console.log(deviceDescriptor);
         this.deviceMake = deviceDescriptor.deviceMake;
         this.deviceModel = deviceDescriptor.deviceModel;
         this.firmwareVersion = deviceDescriptor.firmwareVersion;
@@ -59,18 +57,6 @@ export class DeviceService {
         this.instruments.trigger = new TriggerInstrumentService(this.transport, 'deviceDescriptor.trigger');
         this.instruments.gpio = new GpioInstrumentService(this.transport, deviceDescriptor.gpio);
     }
-
-    /*getFirmwareVersions() {
-        this.transport.getRequest(this.firmwareRepositoryUrl).subscribe(
-            (event) => {
-                console.log(event);
-            },
-            (err) => {
-                console.log(err);
-            },
-            () => { }
-        );
-    }*/
 
     multiCommand(commandObject: any): Observable<any> {
         let commandToBeSent = {

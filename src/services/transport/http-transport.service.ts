@@ -8,16 +8,13 @@ import { GenericTransportService } from './generic-transport.service';
 @Injectable()
 export class HttpTransportComponent extends GenericTransportService {
 
-    public streamState: {
+    private streamState: {
         mode: string,
         remainingSamples: number
     };
 
-    public dataSource;
-    public dataSourceSubscription;
-
-    public start;
-    public finish;
+    private start;
+    private finish;
 
     constructor(_rootUri: string) {
         console.log('Transport HTTP Contructor');

@@ -145,14 +145,7 @@ export class OscInstrumentService extends GenericInstrumentService {
                                 });
                                 let dt = 1 / (command.osc[channel][0].actualSampleFreq / 1000);
                                 let pointContainer = [];
-                                /*let triggerPosition = command.osc[chans[0]][0].triggerIndex * dt;*/
                                 let triggerPosition = -1 * command.osc[channel][0].triggerDelay / Math.pow(10, 12) + dt * scaledArray.length / 2;
-                                /*if (triggerPosition < 0) {
-                                    console.log('trigger not in buffer!');
-                                    triggerPosition = -1 * command.osc[channel][0].triggerDelay / Math.pow(10, 12);
-                                }*/
-                                console.log(':::::TRIGGER POSITION PARSED');
-                                console.log(triggerPosition);
                                 for (let i = 0; i < scaledArray.length; i++) {
                                     pointContainer.push([i * dt - triggerPosition, scaledArray[i]]);
                                 }
@@ -187,68 +180,6 @@ export class OscInstrumentService extends GenericInstrumentService {
                 () => { }
             )
         });
-    }
-
-    //Stream buffers using multiple single calls
-    /*streamRunSingle(chans: Array<number>, voltageMultipliers: number[], delay = 0): Observable<Array<WaveformComponent>> {
-        //If no channels are active no need to talk to hardware
-        if (chans.length == 0) {
-            return Observable.create((observer) => {
-                observer.complete();
-            });
-        }
-
-        let command = {
-            "osc": {}
-        }
-        chans.forEach((element, index, array) => {
-            command.osc[chans[index]] =
-                [
-                    {
-                        "command": "runSingle"
-                    }
-                ]
-        });
-
-        return Observable.create((observer) => {
-            this.transport.streamFrom(this.endpoint, JSON.stringify(command), 'json', delay).subscribe(
-                (data) => {
-                    //Handle device errors and warnings
-                    let megaString = String.fromCharCode.apply(null, new Int8Array(data.slice(0)));
-                    let binaryIndexStringLength = megaString.indexOf('\r\n');
-                    let binaryIndex = parseFloat(megaString.substring(0, binaryIndexStringLength));
-                    let command = JSON.parse(megaString.substring(binaryIndexStringLength + 2, binaryIndex));
-                    for (let channel in command.osc) {
-                        let binaryData = new Int16Array(data.slice(binaryIndex + command.osc[channel][0].offset, binaryIndex + command.osc[channel][0].offset + command.osc[channel][0].length));
-                        let untypedArray = Array.prototype.slice.call(binaryData);
-                        let scaledArray = untypedArray.map((voltage) => {
-                            return voltage * voltageMultipliers[0];
-                        });
-                        command.osc[channel][0].waveform.y = scaledArray;
-                        this.dataBuffer[this.dataBufferWriteIndex][parseInt(channel)] = new WaveformComponent(command.osc[parseInt(channel)][0].waveform);
-                    }
-                    observer.next(this.dataBuffer[this.dataBufferWriteIndex]);
-                    this.dataBufferWriteIndex = (this.dataBufferWriteIndex + 1) % this.numDataBuffers;
-                    if (this.dataBufferFillSize < this.numDataBuffers) {
-                        this.dataBufferFillSize++;
-                        this.activeBuffer = this.dataBufferFillSize.toString();
-                    }
-                    else {
-                        this.activeBuffer = (this.numDataBuffers).toString();
-                    }
-                },
-                (err) => {
-                    observer.error(err);
-                },
-                () => {
-                    observer.complete();
-                }
-            )
-        });
-    }*/
-
-    stopStream() {
-        this.transport.stopStream();
     }
 
 }

@@ -4,6 +4,6 @@ import { Injectable } from '@angular/core';
 export class TriggerChannelService {
 
     constructor(triggerChannelDescriptor: any) {
-        console.log(triggerChannelDescriptor);
+        
     }
 }

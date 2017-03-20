@@ -37,7 +37,6 @@ export class GpioInstrumentService extends GenericInstrumentService {
                     }
                 ]
         });
-        console.log(command);
         return super._genericResponseHandler(command);
     }
 
@@ -55,7 +54,6 @@ export class GpioInstrumentService extends GenericInstrumentService {
                     }
                 ]
         });
-        console.log(command);
         return super._genericResponseHandler(command);
     }
 
@@ -93,7 +91,6 @@ export class GpioInstrumentService extends GenericInstrumentService {
                             return;
                         }
                     }
-                    console.log(data);
                     observer.next(data);
                     observer.complete();
 

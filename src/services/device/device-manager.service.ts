@@ -176,7 +176,7 @@ export class DeviceManagerService {
         return -1;
     }
 
-    xmlToJson(data): string[] {
+    private xmlToJson(data): string[] {
         let parser = new DOMParser();
         let xmlDoc;
         let contents;
@@ -221,7 +221,7 @@ export class DeviceManagerService {
         return arrayToSort;
     }
 
-    getLatestFirmwareVersionFromArray(firmwareVersionsArray: string[]) {
+    private getLatestFirmwareVersionFromArray(firmwareVersionsArray: string[]) {
         firmwareVersionsArray.sort((a, b) => {
             let aSplit = a.split('.');
             let bSplit = b.split('.');

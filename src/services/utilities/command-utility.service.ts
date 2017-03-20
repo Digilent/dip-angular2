@@ -19,9 +19,6 @@ export class CommandUtilityService {
             let currentReadIndex: number = 0;
             let chunkLength: number;
             let chunkInfo = this._findNewLineChar(chunkGuardLength, data, currentReadIndex);
-            console.log('first');
-            console.log(chunkInfo);
-            console.log(String.fromCharCode.apply(null, new Uint8Array(data.slice(0, 300))));
             chunkLength = this._getChunkLength(chunkInfo.stringBuffer);
             currentReadIndex = chunkInfo.endingIndex;
             let jsonPortion;
@@ -33,13 +30,9 @@ export class CommandUtilityService {
                 return;
             }
             currentReadIndex = currentReadIndex + chunkLength + 2;
-            console.log(currentReadIndex);
             chunkInfo = this._findNewLineChar(chunkGuardLength, data, currentReadIndex);
             chunkLength = this._getChunkLength(chunkInfo.stringBuffer);
-            console.log(chunkInfo);
             currentReadIndex = chunkInfo.endingIndex;
-            console.log(currentReadIndex, chunkLength);
-            console.log
             let typedArray;
             try {
                 typedArray = new Int16Array(data.slice(currentReadIndex, currentReadIndex + chunkLength));
@@ -120,6 +113,9 @@ export class CommandUtilityService {
     }
 
     createInt16ArrayBuffer(array: number[]): ArrayBuffer {
+        if (array.length % 2 !== 0) {
+            throw new Error('Array length must be multiple of two!');
+        }
         let arrayBufferView = new Int16Array(array);
         return arrayBufferView.buffer;
     }

@@ -32,7 +32,6 @@ export class DcInstrumentService extends GenericInstrumentService {
 
     //Get the output voltage(s) of the specified DC power supply channel(s).
     getVoltagesJson(chans) {
-        console.log('dc get voltages');
         let command = {
             "dc": {}
         }

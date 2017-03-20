@@ -20,14 +20,6 @@ export class TriggerInstrumentService extends GenericInstrumentService {
     constructor(_transport: TransportContainerService, _triggerInstrumentDescriptor: any) {
         super(_transport, '/');
         console.log('Trigger Instrument Constructor');
-
-        //Populate DC supply parameters
-        //this.numChans = _triggerInstrumentDescriptor.numChans;
-
-        //Populate channels        
-        /*for (let channel in _triggerInstrumentDescriptor) {
-            this.chans.push(new TriggerChannelComponent(_triggerInstrumentDescriptor[channel]));
-        }*/
     }
 
     setParametersJson(chans: number[], sources: Object[], targetsArray: Object[]) {
@@ -48,7 +40,6 @@ export class TriggerInstrumentService extends GenericInstrumentService {
     }
 
     setParametersParse(chan, command) {
-        console.log(command);
         return 'set Parameters channel ' + chan + ' is done!';
     }
 
@@ -132,7 +123,6 @@ export class TriggerInstrumentService extends GenericInstrumentService {
     }
 
     stopParse(chan, command) {
-        console.log(command);
         return 'stop done';
     }
 
@@ -177,10 +167,6 @@ export class TriggerInstrumentService extends GenericInstrumentService {
 
         let command = this.forceTriggerJson(chans);
         return super._genericResponseHandler(command);
-    }
-
-    stopStream() {
-        this.transport.stopStream();
     }
 
 }
