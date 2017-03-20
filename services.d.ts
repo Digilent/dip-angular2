@@ -15,5 +15,5 @@ export * from './lib/device/instruments/trigger/trigger-channel.service';
 export * from './lib/device/instruments/trigger/trigger-instrument.service';
 export * from './lib/transport/generic-transport.service';
 export * from './lib/transport/http-transport.service';
-export * from './lib/transport/transport.service';
+export * from './lib/transport/transport-container.service';
 export * from './lib/utilities/command-utility.service';
