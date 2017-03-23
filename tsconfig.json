@@ -1,0 +1,51 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "es2015",
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "lib": [
+            "es2015",
+            "dom"
+        ],
+        "noImplicitAny": false,
+        "suppressImplicitAnyIndexErrors": true,
+        "declaration": true,
+        "outDir": "./dist"
+    },
+    "files": [
+        "src/services/data-types/waveform.service.ts",
+        "src/services/device/device-manager.service.ts",
+        "src/services/device/device.service.ts",
+        "src/services/device/instruments/awg/awg-channel.service.ts",
+        "src/services/device/instruments/awg/awg-instrument.service.ts",
+        "src/services/device/instruments/dc/dc-channel.service.ts",
+        "src/services/device/instruments/dc/dc-instrument.service.ts",
+        "src/services/device/instruments/gpio/gpio-instrument.service.ts",
+        "src/services/device/instruments/osc/osc-channel.service.ts",
+        "src/services/device/instruments/osc/osc-instrument.service.ts",
+        "src/services/device/instruments/la/la-channel.service.ts",
+        "src/services/device/instruments/la/la-instrument.service.ts",
+        "src/services/device/instruments/trigger/trigger-channel.service.ts",
+        "src/services/device/instruments/trigger/trigger-instrument.service.ts",
+        "src/services/simulated-device/simulated-device-helper.service.ts",
+        "src/services/simulated-device/simulated-device.service.ts",
+        "src/services/simulated-device/instruments/simulated-awg.service.ts",
+        "src/services/simulated-device/instruments/simulated-dc.service.ts",
+        "src/services/simulated-device/instruments/simulated-gpio.service.ts",
+        "src/services/simulated-device/instruments/simulated-la.service.ts",
+        "src/services/simulated-device/instruments/simulated-osc.service.ts",
+        "src/services/simulated-device/instruments/simulated-trigger.service.ts",
+        "src/services/transport/transport-container.service.ts",
+        "src/services/transport/local-transport.service.ts",
+        "src/services/transport/http-transport.service.ts",
+        "src/services/transport/generic-transport.service.ts",
+        "src/services/utilities/command-utility.service.ts"        
+    ],
+    "angularCompilerOptions": {
+        "genDir": "./dist",
+        "skipMetadataEmit": false
+    }
+}
