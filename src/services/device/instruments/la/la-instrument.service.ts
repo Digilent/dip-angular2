@@ -42,7 +42,27 @@ export class LaInstrumentService extends GenericInstrumentService {
         }
     }
 
-    setParametersJson(chans: number[], sampleFreqs: number[], bufferSizes: number[]) {
+    getCurrentStateJson(chans: number[]) {
+        let command = {
+            la: {}
+        };
+        chans.forEach((element, index, array) => {
+            command.la[chans[index]] = 
+            [
+                {
+                    command: "getCurrentState"
+                }
+            ]
+        });
+        return command;
+    }
+
+    getCurrentState(chans: number[]) {
+        let command = this.getCurrentStateJson(chans);
+        return super._genericResponseHandler(command);
+    }
+
+    setParametersJson(chans: number[], bitmasks: number[], sampleFreqs: number[], bufferSizes: number[], triggerDelays: number[]) {
         let command = {
             "la": {}
         }
@@ -50,9 +70,11 @@ export class LaInstrumentService extends GenericInstrumentService {
             command.la[chans[index]] =
                 [
                     {
-                        "command": "setParameters",
-                        "sampleFreq": sampleFreqs[index] * 1000,
-                        "bufferSize": bufferSizes[index]
+                        command: "setParameters",
+                        bitmask: bitmasks[index],
+                        triggerDelay: Math.round(triggerDelays[index] * Math.pow(10, 12)),
+                        sampleFreq: Math.round(sampleFreqs[index] * 1000),
+                        bufferSize: bufferSizes[index]
                     }
                 ]
         });
@@ -64,14 +86,14 @@ export class LaInstrumentService extends GenericInstrumentService {
     }
 
     //Tell OpenScope to run once and return a buffer
-    setParameters(chans: number[], sampleFreqs: number[], bufferSizes: number[]): Observable<any> {
+    setParameters(chans: number[], bitmasks: number[], sampleFreqs: number[], bufferSizes: number[], triggerDelays: number[]): Observable<any> {
         if (chans.length == 0) {
             return Observable.create((observer) => {
                 observer.complete();
             });
         }
 
-        let command = this.setParametersJson(chans, sampleFreqs, bufferSizes);
+        let command = this.setParametersJson(chans, bitmasks, sampleFreqs, bufferSizes, triggerDelays);
         return super._genericResponseHandler(command);
     }
 

@@ -9,6 +9,7 @@ export class SimulatedLaService {
     private buffers: number[][] = [];
     private sampleFreqs: number[] = [];
     private bufferSizes: number[] = [];
+    private triggerDelays: number[] = [];
     private laDescriptor;
 
     constructor(_simulatedDeviceService: SimulatedDeviceHelperService) {
@@ -18,12 +19,28 @@ export class SimulatedLaService {
             this.buffers.push([]);
             this.sampleFreqs.push(0);
             this.bufferSizes.push(0);
+            this.triggerDelays.push(0);
         }
+    }
+
+    getCurrentState(chan) {
+        return {
+            command: "getCurrentState",
+            statusCode: 0,
+            state: "idle",
+            acqCount: 0,
+            bitmask: 1023,
+            actualSampleFreq: this.sampleFreqs[chan],
+            actualBufferSize: this.bufferSizes[chan],
+            triggerDelay: this.triggerDelays[chan],
+            wait: 0
+        };
     }
 
     setParameters(chan, commandObject) {
         this.sampleFreqs[chan] = commandObject.sampleFreq;
         this.bufferSizes[chan] = commandObject.bufferSize;
+        this.triggerDelays[chan] = commandObject.triggerDelay;
         this.simulatedDeviceService.setLaParameters(commandObject, chan);
         return {
             "command": "setParameters",
@@ -46,13 +63,16 @@ export class SimulatedLaService {
         return {
             command: "read",
             statusCode: 0,
+            wait: 0,
             binaryLength: 2 * typedArray.length,
             binaryOffset: null,
             acqCount: 3,
+            bitmask: 1023,
             actualSampleFreq: this.sampleFreqs[channel],
             y: typedArray,
             pointOfInterest: this.bufferSizes[channel] / 2,
-            triggerIndex: this.bufferSizes[channel] / 2
+            triggerIndex: this.bufferSizes[channel] / 2,
+            actualTriggerDelay: this.triggerDelays[channel]
         };
     }
 
