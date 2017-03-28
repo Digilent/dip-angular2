@@ -47,12 +47,12 @@ export class LaInstrumentService extends GenericInstrumentService {
             la: {}
         };
         chans.forEach((element, index, array) => {
-            command.la[chans[index]] = 
-            [
-                {
-                    command: "getCurrentState"
-                }
-            ]
+            command.la[chans[index]] =
+                [
+                    {
+                        command: "getCurrentState"
+                    }
+                ]
         });
         return command;
     }
@@ -116,6 +116,7 @@ export class LaInstrumentService extends GenericInstrumentService {
                     }
                 ]
         });
+        console.log('READREADREADREAD');
         return Observable.create((observer) => {
             this.transport.writeRead('/', JSON.stringify(command), 'json').subscribe(
                 (data) => {
@@ -126,37 +127,47 @@ export class LaInstrumentService extends GenericInstrumentService {
                             let channelsObject = {};
                             let binaryData = new Int16Array(data.typedArray.slice(command.la[chans[0].toString()][0].binaryOffset, command.la[chans[0].toString()][0].binaryOffset + command.la[chans[0].toString()][0].binaryLength));
                             let untypedArray = Array.prototype.slice.call(binaryData);
-                            for (let channel in command.la) {
-                                if (command.la[channel][0].statusCode > 0) {
+                            console.log('COMANDMADNDMAFNADFMANCOMANDNAJOCMLANDF');
+                            for (let group in command.la) {
+                                if (command.la[group][0].statusCode > 0) {
                                     observer.error(command);
                                     return;
                                 }
-                                channelsObject[channel] = [];
+                                let binaryString = command.la[group][0].bitmask.toString(2);
+                                console.log(binaryString);
+                                for (let i = 0; i < binaryString.length; i++) {
+                                    console.log(binaryString[i]);
+                                    if (binaryString[i] === '1') {
+                                        let channel = binaryString.length - i;
+                                        channelsObject[channel] = [];
 
-                                let andVal = Math.pow(2, parseInt(channel) - 1);
-                                let dt = 1 / (command.la[channel][0].actualSampleFreq / 1000);
-                                let pointContainer = [];
-                                let triggerPosition = command.la[chans[0]][0].triggerIndex * dt;
-                                if (triggerPosition < 0) {
-                                    console.log('trigger not in la buffer!');
-                                    triggerPosition = command.la[channel][0].triggerDelay;
-                                }
-                                for (let j = 0; j < untypedArray.length; j++) {
-                                    channelsObject[channel].push((andVal & untypedArray[j]) > 0 ? 1 : 0);
-                                    pointContainer.push([j * dt - triggerPosition, (andVal & untypedArray[j]) > 0 ? 1 : 0]);
-                                }
+                                        let andVal = Math.pow(2, channel - 1);
+                                        let dt = 1 / (command.la[group][0].actualSampleFreq / 1000);
+                                        let pointContainer = [];
+                                        let triggerPosition = command.la[group][0].triggerIndex * dt;
+                                        if (triggerPosition < 0) {
+                                            console.log('trigger not in la buffer!');
+                                            triggerPosition = command.la[group][0].triggerDelay;
+                                        }
+                                        for (let j = 0; j < untypedArray.length; j++) {
+                                            channelsObject[channel].push((andVal & untypedArray[j]) > 0 ? 1 : 0);
+                                            pointContainer.push([j * dt - triggerPosition, (andVal & untypedArray[j]) > 0 ? 1 : 0]);
+                                        }
 
-                                this.dataBuffer[this.dataBufferWriteIndex][parseInt(channel) - 1] = new WaveformService({
-                                    dt: 1 / (command.la[channel][0].actualSampleFreq / 1000),
-                                    t0: 0,
-                                    y: channelsObject[channel],
-                                    data: pointContainer,
-                                    pointOfInterest: command.la[channel][0].pointOfInterest,
-                                    triggerPosition: command.la[channel][0].triggerIndex,
-                                    seriesOffset: 0.5,
-                                    triggerDelay: null
-                                });
+                                        this.dataBuffer[this.dataBufferWriteIndex][channel - 1] = new WaveformService({
+                                            dt: 1 / (command.la[group][0].actualSampleFreq / 1000),
+                                            t0: 0,
+                                            y: channelsObject[channel],
+                                            data: pointContainer,
+                                            pointOfInterest: command.la[group][0].pointOfInterest,
+                                            triggerPosition: triggerPosition,
+                                            seriesOffset: 0.5,
+                                            triggerDelay: command.la[group][0].triggerDelay
+                                        });
+                                    }
+                                }
                             }
+
                             this.dataBufferReadIndex = this.dataBufferWriteIndex;
                             this.dataBufferWriteIndex = (this.dataBufferWriteIndex + 1) % this.numDataBuffers;
                             let finish = performance.now();
