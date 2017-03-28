@@ -74,12 +74,12 @@ export class OscInstrumentService extends GenericInstrumentService {
             command.osc[chans[index]] =
                 [
                     {
-                        "command": "setParameters",
-                        "offset": offsets[index] * 1000,
-                        "gain": gains[index],
-                        "sampleFreq": Math.round(sampleFreqs[index] * 1000),
-                        "bufferSize": bufferSizes[index],
-                        "triggerDelay": Math.round(delays[index] * 1000000000000)
+                        command: "setParameters",
+                        vOffset: Math.round(offsets[index] * 1000),
+                        gain: gains[index],
+                        sampleFreq: Math.round(sampleFreqs[index] * 1000),
+                        bufferSize: Math.round(bufferSizes[index]),
+                        triggerDelay: Math.round(delays[index] * 1000000000000)
                     }
                 ]
         });
