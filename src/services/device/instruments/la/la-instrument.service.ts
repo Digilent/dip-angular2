@@ -125,7 +125,17 @@ export class LaInstrumentService extends GenericInstrumentService {
                         (data) => {
                             let command = data.json;
                             let channelsObject = {};
-                            let binaryData = new Int16Array(data.typedArray.slice(command.la[chans[0].toString()][0].binaryOffset, command.la[chans[0].toString()][0].binaryOffset + command.la[chans[0].toString()][0].binaryLength));
+                            let binaryData;
+                            console.log('la response received');
+                            console.log(command);
+                            try {
+                                binaryData = new Int16Array(data.typedArray.slice(command.la[chans[0].toString()][0].binaryOffset, command.la[chans[0].toString()][0].binaryOffset + command.la[chans[0].toString()][0].binaryLength));
+                            }
+                            catch(e) {
+                                console.log(e);
+                                observer.error(e);
+                                return;
+                            }
                             let untypedArray = Array.prototype.slice.call(binaryData);
                             console.log('COMANDMADNDMAFNADFMANCOMANDNAJOCMLANDF');
                             for (let group in command.la) {
