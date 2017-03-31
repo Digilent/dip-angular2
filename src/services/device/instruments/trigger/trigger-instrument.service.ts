@@ -19,7 +19,6 @@ export class TriggerInstrumentService extends GenericInstrumentService {
 
     constructor(_transport: TransportContainerService, _triggerInstrumentDescriptor: any) {
         super(_transport, '/');
-        console.log('Trigger Instrument Constructor');
     }
 
     setParametersJson(chans: number[], sources: Object[], targetsArray: Object[]) {
@@ -153,7 +152,6 @@ export class TriggerInstrumentService extends GenericInstrumentService {
     }
 
     forceTriggerParse(chan, command) {
-        console.log(command);
         return 'force trigger done';
     }
 

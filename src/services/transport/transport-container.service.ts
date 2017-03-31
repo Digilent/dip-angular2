@@ -12,7 +12,6 @@ export class TransportContainerService {
     public transport: GenericTransportService;
 
     constructor(_uri: string) {
-        console.log('Transport Service Parent Constructor');
         this.transport = new HttpTransportService(_uri);
     }
 

@@ -17,7 +17,6 @@ export class DcInstrumentService extends GenericInstrumentService {
 
     constructor(_transport: TransportContainerService, _dcInstrumentDescriptor: any) {
         super(_transport, '/');
-        console.log('DC Instrument Constructor');
 
         //Populate DC supply parameters
         this.numChans = _dcInstrumentDescriptor.numChans;
@@ -79,7 +78,6 @@ export class DcInstrumentService extends GenericInstrumentService {
                 (data) => {
                     for (let i = 0; i < chans.length; i++) {
                         if (data.dc == undefined || data.dc[chans[i]][0].statusCode > 0 || data.agent != undefined) {
-                            console.log(data);
                             observer.error(data);
                             return;
                         }

@@ -3,9 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class SimulatedDeviceHelperService {
 
-    constructor() {
-        console.log('sim device service constructor');
-    }
+    constructor() { }
     private enumeration: any;
 
     /*AWG Settings*/

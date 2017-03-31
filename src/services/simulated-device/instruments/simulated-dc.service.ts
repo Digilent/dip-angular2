@@ -23,7 +23,6 @@ export class SimulatedDcService {
     }
 
     setVoltage(_chan, _voltage) {
-        console.log('setting ' + _chan + ' to ' + _voltage + 'mV');
         this.voltages[_chan] = _voltage;
         return {
             command: 'setVoltage',

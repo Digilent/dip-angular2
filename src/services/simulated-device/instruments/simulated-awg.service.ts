@@ -25,7 +25,6 @@ export class SimulatedAwgService {
     }
 
     setRegularWaveform(chan, commandObject) {
-        console.log('awg chan: ' + chan);
         this.signalTypes[chan] = commandObject.signalType;
         this.signalFreqs[chan] = commandObject.signalFreq;
         this.vpps[chan] = commandObject.vpp;
@@ -51,7 +50,6 @@ export class SimulatedAwgService {
     }
 
     stop(chan) {
-        console.log('stop');
         this.simulatedDeviceService.setTriggerArmed(false);
         return {
             "command": "stop",

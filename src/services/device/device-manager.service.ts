@@ -17,7 +17,6 @@ export class DeviceManagerService {
     public activeDeviceIndex: number;
 
     constructor() {
-        console.log('Device Manager Service Constructor');
         this.transport = new TransportContainerService(null);
     }
 
@@ -44,7 +43,6 @@ export class DeviceManagerService {
                         observer.error(error);
                         return;
                     }
-                    console.log(response);
 
                     observer.next(response);
                     observer.complete();
@@ -79,7 +77,6 @@ export class DeviceManagerService {
                     catch (error) {
                         observer.error(error);
                     }
-                    console.log(response);
 
                     observer.next(response);
                     observer.complete();
@@ -119,7 +116,6 @@ export class DeviceManagerService {
                     this.transport.writeRead('/', JSON.stringify(command), 'json').subscribe(
                         (deviceDescriptor) => {
                             let response = JSON.parse(String.fromCharCode.apply(null, new Int8Array(deviceDescriptor.slice(0))));
-                            console.log(response);
                             observer.next(response);
                             observer.complete();
                         },
@@ -254,7 +250,6 @@ export class DeviceManagerService {
                 },
                 (err) => {
                     reject(err);
-                    console.log(err);
                 },
                 () => { }
             );

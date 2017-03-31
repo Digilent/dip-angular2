@@ -7,9 +7,7 @@ export abstract class GenericTransportService {
 
     protected rootUri: string;
 
-    constructor() {
-        console.log('Generic Transport Contructor');
-    }
+    constructor() { }
 
     abstract writeRead(endpoint: string, sendData: any, dataType: string): Observable<any>;
     abstract streamFrom(endpoint: string, sendData: any, dataType: string, delay?: number): Observable<any>;

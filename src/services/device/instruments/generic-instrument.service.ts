@@ -14,7 +14,6 @@ export abstract class GenericInstrumentService {
     abstract numChans: number;
 
     constructor(_transport: TransportContainerService, _endpoint: string) {
-        console.log('Generic Instrument Contructor');
         this.transport = _transport;
         this.endpoint = _endpoint;
     }

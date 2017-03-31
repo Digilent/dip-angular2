@@ -16,7 +16,6 @@ export class LocalTransportService extends GenericTransportService {
     public simulatedDevice: SimulatedDeviceService;
 
     constructor(deviceEnumeration: string) {
-        console.log('Transport Local Contructor');
         super();
         this.streamState = {
             mode: 'off',
@@ -48,7 +47,7 @@ export class LocalTransportService extends GenericTransportService {
                     observer.next(data);
                 },
                 (err) => {
-                    console.log(err);
+                    observer.error(err);
                 },
                 () => {
 
@@ -67,11 +66,11 @@ export class LocalTransportService extends GenericTransportService {
             let getData = function (writeReadHelper, streamState: any, rootUri: string, endpoint: string, sendData: Object, delay: number) {
                 writeReadHelper(rootUri, endpoint, sendData).subscribe(
                     (data: any) => {
-                        //console.log('Inner Read ', i, ' >> ', data);
-                        observer.next(data)
+                        observer.next(data);
                     },
                     (err) => {
-                        console.log(err);
+                        observer.error(err);
+                        return;
                     },
                     () => {
                         i++;

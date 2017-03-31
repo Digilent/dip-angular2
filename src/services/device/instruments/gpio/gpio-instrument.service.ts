@@ -86,7 +86,6 @@ export class GpioInstrumentService extends GenericInstrumentService {
 
                     for (let i = 0; i < chans.length; i++) {
                         if (data.gpio == undefined || data.gpio[chans[i]][0].statusCode > 0 || data.agent != undefined) {
-                            console.log(data);
                             observer.error(data);
                             return;
                         }

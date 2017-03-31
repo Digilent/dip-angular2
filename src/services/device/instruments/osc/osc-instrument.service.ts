@@ -25,7 +25,6 @@ export class OscInstrumentService extends GenericInstrumentService {
 
     constructor(_transport: TransportContainerService, _oscInstrumentDescriptor: any) {
         super(_transport, '/');
-        console.log('OSC Instrument Constructor');
 
         //Populate DC supply parameters
         this.numChans = _oscInstrumentDescriptor.numChans;
@@ -125,11 +124,8 @@ export class OscInstrumentService extends GenericInstrumentService {
         return Observable.create((observer) => {
             this.transport.writeRead('/', JSON.stringify(command), 'json').subscribe(
                 (data) => {
-                    let start = performance.now();
                     this.commandUtilityService.observableParseChunkedTransfer(data).subscribe(
                         (data) => {
-                            let fin1 = performance.now();
-                            console.log('outside function parse time: ' + (fin1 - start));
                             let command = data.json;
                             console.log(command);
                             for (let channel in command.osc) {
@@ -163,7 +159,6 @@ export class OscInstrumentService extends GenericInstrumentService {
                             this.dataBufferReadIndex = this.dataBufferWriteIndex;
                             this.dataBufferWriteIndex = (this.dataBufferWriteIndex + 1) % this.numDataBuffers;
                             let finish = performance.now();
-                            console.log('parse time: ' + (finish - start));
                             observer.next(command);
                             //Handle device errors and warnings
                             observer.complete();

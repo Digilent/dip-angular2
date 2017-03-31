@@ -5,9 +5,7 @@ import 'rxjs/Rx';
 @Injectable()
 export class CommandUtilityService {
 
-    constructor() {
-        console.log('command parser service constructor');
-    }
+    constructor() { }
 
     parseChunkedTransfer(data): Promise<any> {
         return new Promise((resolve, reject) => {
@@ -49,7 +47,6 @@ export class CommandUtilityService {
     }
 
     observableParseChunkedTransfer(data): Observable<any> {
-        let start = performance.now();
         return Observable.create((observer) => {
             if (String.fromCharCode.apply(null, new Uint8Array(data.slice(0, 1))) === '{') {
                 observer.error('json');
@@ -81,8 +78,6 @@ export class CommandUtilityService {
                 observer.error(e);
                 return;
             }
-            let finish = performance.now();
-            console.log('in function parse time: ' + (finish - start));
             observer.next({
                 json: jsonPortion,
                 typedArray: typedArray

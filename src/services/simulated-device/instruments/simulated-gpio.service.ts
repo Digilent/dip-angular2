@@ -34,7 +34,6 @@ export class SimulatedGpioService {
     }
 
     write(_chan, _value) {
-        console.log('setting ' + _chan + ' to ' + _value);
         this.values[_chan] = _value;
         return {
             command: 'write',
@@ -44,7 +43,6 @@ export class SimulatedGpioService {
     }
 
     setParameters(_chan, _direction) {
-        console.log('setting ' + _chan + ' to ' + _direction);
         this.values[_chan] = _direction;
         return {
             command: 'setParameters',

@@ -22,6 +22,7 @@ export class DeviceService {
     public deviceMake: string;
     public deviceModel: string;
     public firmwareVersion;
+    public calibrationSource: 'UNCALIBRATED' | 'CALIBRATED' | 'FACTORY' | 'USER';
     public instruments: {
         awg: AwgInstrumentService,
         dc: DcInstrumentService,
@@ -42,7 +43,6 @@ export class DeviceService {
     public listFirmwareUrl: string = 'https://s3-us-west-2.amazonaws.com/digilent?prefix=Software/OpenScope+MZ/release/without-bootloader';
 
     constructor(_rootUri: string, deviceDescriptor: any) {
-        console.log('Device Contructor');
 
         this.descriptorObject = deviceDescriptor;
         this.rootUri = _rootUri;
@@ -53,6 +53,7 @@ export class DeviceService {
         this.deviceMake = deviceDescriptor.deviceMake;
         this.deviceModel = deviceDescriptor.deviceModel;
         this.firmwareVersion = deviceDescriptor.firmwareVersion;
+        this.calibrationSource = deviceDescriptor.calibrationSource;
         this.instruments.awg = new AwgInstrumentService(this.transport, deviceDescriptor.awg);
         this.instruments.dc = new DcInstrumentService(this.transport, deviceDescriptor.dc);
         this.instruments.la = new LaInstrumentService(this.transport, deviceDescriptor.la);
@@ -103,8 +104,6 @@ export class DeviceService {
                     let firstChar = String.fromCharCode.apply(null, new Int8Array(arrayBuffer.slice(0, 1)));
                     if (!isNaN(parseInt(firstChar))) {
                         //TODO switch to chunked transfer
-                        //OSJB
-                        //console.log('OSJB');
 
                         let count = 0;
                         let i = 0;
@@ -127,13 +126,12 @@ export class DeviceService {
                             binaryData = arrayBuffer.slice(binaryIndexStringLength + 2 + binaryIndex);
                         }
                         catch (error) {
-                            console.log(error);
                             console.log('Error parsing OSJB response. Printing entire response');
                             console.log(String.fromCharCode.apply(null, new Int8Array(arrayBuffer.slice(0))));
                             observer.error(error);
                             return;
                         }
-                        //console.log('command parsed. Now calling individual parsing functions');
+                        //Command parsed. Now calling individual parsing functions
                         let flag = false;
                         for (let instrument in command) {
                             for (let channel in command[instrument]) {
@@ -161,7 +159,6 @@ export class DeviceService {
                     }
                     else if (firstChar === '{') {
                         //JSON
-                        //console.log('JSON');
                         try {
                             console.log(String.fromCharCode.apply(null, new Int8Array(arrayBuffer.slice(0))));
                             multiCommandResponse = JSON.parse(String.fromCharCode.apply(null, new Int8Array(arrayBuffer.slice(0))));
