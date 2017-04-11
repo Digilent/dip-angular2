@@ -137,7 +137,7 @@ export class LaInstrumentService extends GenericInstrumentService {
                                 return;
                             }
                             let untypedArray = Array.prototype.slice.call(binaryData);
-                            console.log('COMANDMADNDMAFNADFMANCOMANDNAJOCMLANDF');
+                            this.dataBuffer[this.dataBufferWriteIndex] = [];
                             for (let group in command.la) {
                                 if (command.la[group][0].statusCode > 0) {
                                     observer.error(command);
