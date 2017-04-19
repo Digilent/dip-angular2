@@ -9,8 +9,9 @@ export class CommandUtilityService {
 
     parseChunkedTransfer(data): Promise<any> {
         return new Promise((resolve, reject) => {
-            if (String.fromCharCode.apply(null, new Uint8Array(data.slice(0, 1))) === '{') {
-                reject('json');
+            let firstChar = String.fromCharCode.apply(null, new Uint8Array(data.slice(0, 1)));
+            if (isNaN(parseInt(firstChar, 16))) {
+                reject('json or bad packet');
                 return;
             }
             let chunkGuardLength = 100;
@@ -31,9 +32,15 @@ export class CommandUtilityService {
             chunkInfo = this._findNewLineChar(chunkGuardLength, data, currentReadIndex);
             chunkLength = this._getChunkLength(chunkInfo.stringBuffer);
             currentReadIndex = chunkInfo.endingIndex;
+            let binaryDataSlice = data.slice(currentReadIndex, currentReadIndex + chunkLength);
+            if (binaryDataSlice.byteLength !== chunkLength) {
+                console.warn(new Uint8Array(data));
+                reject('corrupt transfer');
+                return;
+            }
             let typedArray;
             try {
-                typedArray = new Int16Array(data.slice(currentReadIndex, currentReadIndex + chunkLength));
+                typedArray = new Int16Array(binaryDataSlice);
             }
             catch(e) {
                 reject(e);
@@ -48,8 +55,9 @@ export class CommandUtilityService {
 
     observableParseChunkedTransfer(data): Observable<any> {
         return Observable.create((observer) => {
-            if (String.fromCharCode.apply(null, new Uint8Array(data.slice(0, 1))) === '{') {
-                observer.error('json');
+            let firstChar = String.fromCharCode.apply(null, new Uint8Array(data.slice(0, 1)));
+            if (isNaN(parseInt(firstChar, 16))) {
+                observer.error('json or bad packet');
                 return;
             }
             let chunkGuardLength = 100;
@@ -70,9 +78,15 @@ export class CommandUtilityService {
             chunkInfo = this._findNewLineChar(chunkGuardLength, data, currentReadIndex);
             chunkLength = this._getChunkLength(chunkInfo.stringBuffer);
             currentReadIndex = chunkInfo.endingIndex;
+            let binaryDataSlice = data.slice(currentReadIndex, currentReadIndex + chunkLength);
+            if (binaryDataSlice.byteLength !== chunkLength) {
+                console.warn(new Uint8Array(data));
+                observer.error('corrupt transfer');
+                return;
+            }
             let typedArray;
             try {
-                typedArray = new Int16Array(data.slice(currentReadIndex, currentReadIndex + chunkLength));
+                typedArray = new Int16Array(binaryDataSlice);
             }
             catch(e) {
                 observer.error(e);
