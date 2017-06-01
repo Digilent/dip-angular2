@@ -153,7 +153,7 @@ export class OscInstrumentService extends GenericInstrumentService {
                                     pointOfInterest: command.osc[channel][0].pointOfInterest,
                                     triggerPosition: command.osc[channel][0].triggerIndex,
                                     seriesOffset: command.osc[channel][0].actualVOffset / 1000,
-                                    triggerDelay: command.osc[channel][0].triggerDelay
+                                    triggerDelay: command.osc[channel][0].triggerDelay || command.osc[channel][0].actualTriggerDelay
                                 });
                             }
                             this.dataBufferReadIndex = this.dataBufferWriteIndex;

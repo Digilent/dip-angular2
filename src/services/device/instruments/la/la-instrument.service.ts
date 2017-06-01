@@ -172,7 +172,7 @@ export class LaInstrumentService extends GenericInstrumentService {
                                             pointOfInterest: command.la[group][0].pointOfInterest,
                                             triggerPosition: triggerPosition,
                                             seriesOffset: 0.5,
-                                            triggerDelay: command.la[group][0].triggerDelay
+                                            triggerDelay: command.la[group][0].triggerDelay || command.la[group][0].actualTriggerDelay
                                         });
                                     }
                                 }
