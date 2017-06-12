@@ -210,8 +210,8 @@ export class DeviceManagerService {
         arrayToSort.sort((a, b) => {
             let aSplit = a.split('.');
             let bSplit = b.split('.');
-            let aPriority = parseInt(aSplit[0]) * 100000 + parseInt(aSplit[1]) * 1000 + parseInt(aSplit[2]);
-            let bPriority = parseInt(bSplit[0]) * 100000 + parseInt(bSplit[1]) * 1000 + parseInt(bSplit[2]);
+            let aPriority = parseInt(aSplit[0]) * 1000000 + parseInt(aSplit[1]) * 1000 + parseInt(aSplit[2]);
+            let bPriority = parseInt(bSplit[0]) * 1000000 + parseInt(bSplit[1]) * 1000 + parseInt(bSplit[2]);
             return aPriority - bPriority;
         });
         return arrayToSort;
@@ -221,8 +221,8 @@ export class DeviceManagerService {
         firmwareVersionsArray.sort((a, b) => {
             let aSplit = a.split('.');
             let bSplit = b.split('.');
-            let aPriority = parseInt(aSplit[0]) * 100000 + parseInt(aSplit[1]) * 1000 + parseInt(aSplit[2]);
-            let bPriority = parseInt(bSplit[0]) * 100000 + parseInt(bSplit[1]) * 1000 + parseInt(bSplit[2]);
+            let aPriority = parseInt(aSplit[0]) * 1000000 + parseInt(aSplit[1]) * 1000 + parseInt(aSplit[2]);
+            let bPriority = parseInt(bSplit[0]) * 1000000 + parseInt(bSplit[1]) * 1000 + parseInt(bSplit[2]);
             return bPriority - aPriority;
         });
         return firmwareVersionsArray[0];
