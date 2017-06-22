@@ -23,6 +23,7 @@ export class DeviceService {
     public deviceModel: string;
     public firmwareVersion;
     public calibrationSource: 'UNCALIBRATED' | 'CALIBRATED' | 'FACTORY' | 'USER';
+    public macAddress: string;
     public instruments: {
         awg: AwgInstrumentService,
         dc: DcInstrumentService,
@@ -54,6 +55,7 @@ export class DeviceService {
         this.deviceModel = deviceDescriptor.deviceModel;
         this.firmwareVersion = deviceDescriptor.firmwareVersion;
         this.calibrationSource = deviceDescriptor.calibrationSource;
+        this.macAddress = deviceDescriptor.macAddress;
         this.instruments.awg = new AwgInstrumentService(this.transport, deviceDescriptor.awg);
         this.instruments.dc = new DcInstrumentService(this.transport, deviceDescriptor.dc);
         this.instruments.la = new LaInstrumentService(this.transport, deviceDescriptor.la);
