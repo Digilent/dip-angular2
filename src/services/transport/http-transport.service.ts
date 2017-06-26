@@ -31,7 +31,8 @@ export class HttpTransportService extends GenericTransportService {
         return this.rootUri;
     }
 
-    getRequest(requestUrl: string): Observable<any> {
+    getRequest(requestUrl: string, timeout?: number): Observable<any> {
+        timeout = timeout == undefined ? 5000 : timeout;
         return Observable.create((observer) => {
             let XHR = new XMLHttpRequest();
 
@@ -54,7 +55,7 @@ export class HttpTransportService extends GenericTransportService {
             try {
                 XHR.open("GET", requestUrl);
 
-                XHR.timeout = 5000;
+                XHR.timeout = timeout;
 
                 XHR.send();
                 this.start = performance.now();
