@@ -25,8 +25,8 @@ export class TransportContainerService {
     }
 
     //Get request on the specified url
-    getRequest(requestUrl: string): Observable<any> {
-        return this.transport.getRequest(requestUrl);
+    getRequest(requestUrl: string, timeout?: number): Observable<any> {
+        return this.transport.getRequest(requestUrl, timeout);
     }
 
     //Call writeRead on transport component
