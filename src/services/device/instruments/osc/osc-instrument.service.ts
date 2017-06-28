@@ -22,6 +22,7 @@ export class OscInstrumentService extends GenericInstrumentService {
     private dataBufferWriteIndex: number = 0;
     public dataBufferReadIndex: number = 0;
     private commandUtilityService: CommandUtilityService;
+    public rawPacket: ArrayBuffer;
 
     constructor(_transport: TransportContainerService, _oscInstrumentDescriptor: any) {
         super(_transport, '/');
@@ -124,6 +125,7 @@ export class OscInstrumentService extends GenericInstrumentService {
         return Observable.create((observer) => {
             this.transport.writeRead('/', JSON.stringify(command), 'json').subscribe(
                 (data) => {
+                    this.rawPacket = data;
                     this.commandUtilityService.observableParseChunkedTransfer(data).subscribe(
                         (data) => {
                             let command = data.json;
