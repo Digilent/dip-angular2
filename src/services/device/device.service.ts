@@ -9,6 +9,7 @@ import { LaInstrumentService } from './instruments/la/la-instrument.service';
 import { OscInstrumentService } from './instruments/osc/osc-instrument.service';
 import { TriggerInstrumentService } from './instruments/trigger/trigger-instrument.service';
 import { GpioInstrumentService } from './instruments/gpio/gpio-instrument.service';
+import { FileService } from './file.service';
 
 //Services
 import { TransportContainerService } from '../transport/transport-container.service';
@@ -39,6 +40,7 @@ export class DeviceService {
         trigger: null,
         gpio: null
     };
+    public file: FileService;
 
     public firmwareRepositoryUrl: string = 'https://s3-us-west-2.amazonaws.com/digilent/Software/OpenScope+MZ/release/without-bootloader';
     public listFirmwareUrl: string = 'https://s3-us-west-2.amazonaws.com/digilent?prefix=Software/OpenScope+MZ/release/without-bootloader';
@@ -62,6 +64,7 @@ export class DeviceService {
         this.instruments.osc = new OscInstrumentService(this.transport, deviceDescriptor.osc);
         this.instruments.trigger = new TriggerInstrumentService(this.transport, 'deviceDescriptor.trigger');
         this.instruments.gpio = new GpioInstrumentService(this.transport, deviceDescriptor.gpio);
+        this.file = new FileService(this.transport);
     }
 
     multiCommand(commandObject: any): Observable<any> {

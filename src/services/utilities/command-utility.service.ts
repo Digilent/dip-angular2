@@ -53,7 +53,8 @@ export class CommandUtilityService {
         });
     }
 
-    observableParseChunkedTransfer(data): Observable<any> {
+    observableParseChunkedTransfer(data, typedArrayFormat?: 'i16' | 'u8'): Observable<any> {
+        typedArrayFormat = typedArrayFormat == undefined ? 'i16' : typedArrayFormat;
         return Observable.create((observer) => {
             let firstChar = String.fromCharCode.apply(null, new Uint8Array(data.slice(0, 1)));
             if (isNaN(parseInt(firstChar, 16))) {
@@ -86,7 +87,16 @@ export class CommandUtilityService {
             }
             let typedArray;
             try {
-                typedArray = new Int16Array(binaryDataSlice);
+                switch (typedArrayFormat) {
+                    case 'i16':
+                        typedArray = new Int16Array(binaryDataSlice);
+                        break;
+                    case 'u8':
+                        typedArray = new Uint8Array(binaryDataSlice);
+                        break;
+                    default:
+                        typedArray = new Int16Array(binaryDataSlice);
+                }
             }
             catch(e) {
                 observer.error(e);
@@ -138,8 +148,8 @@ export class CommandUtilityService {
         return arrayBuffer;
     }
 
-    createChunkedArrayBuffer(json: any, arrayBuffer: ArrayBuffer): Uint8Array {
-        let jsonString = JSON.stringify(json);
+    createChunkedArrayBuffer(jsonObject: any, arrayBuffer: ArrayBuffer): Uint8Array {
+        let jsonString = JSON.stringify(jsonObject);
         let jsonStringLength = jsonString.length.toString(16);
         let arrayBufferLength = arrayBuffer.byteLength.toString(16);
         let beginningString = jsonStringLength + '\r\n' + jsonString + '\r\n' + arrayBufferLength + '\r\n';
