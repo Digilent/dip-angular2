@@ -13,6 +13,7 @@ export abstract class GenericTransportService {
     abstract streamFrom(endpoint: string, sendData: any, dataType: string, delay?: number): Observable<any>;
     abstract stopStream(): void;
     abstract getRequest(requestUrl: string, timeout?: number): Observable<any>;
+    abstract setTimeout(newTimeout: number): void;
 
     //Update the URI used by the transport
     setUri(_rootUri: string) {

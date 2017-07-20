@@ -16,8 +16,22 @@ export class DeviceManagerService {
     public devices: Array<DeviceService> = [];
     public activeDeviceIndex: number;
 
+    private httpTimeout: number = 5000;
+
     constructor() {
-        this.transport = new TransportContainerService(null);
+        this.transport = new TransportContainerService(null, this.httpTimeout);
+    }
+
+    setHttpTimeout(newTimeout: number) {
+        this.httpTimeout = newTimeout;
+        this.transport.setHttpTimeout(newTimeout);
+        for (let i = 0; i < this.devices.length; i++) {
+            this.devices[i].transport.setHttpTimeout(newTimeout);
+        }
+    }
+
+    getHttpTimeout() {
+        return this.httpTimeout;
     }
 
     //Connect to device and send enumerate command
@@ -157,7 +171,7 @@ export class DeviceManagerService {
             this.activeDeviceIndex = deviceExistCheck;
             return;
         }
-        let dev = new DeviceService(uri, deviceDescriptor.device[0]);
+        let dev = new DeviceService(uri, deviceDescriptor.device[0], this.httpTimeout);
         this.activeDeviceIndex = this.devices.push(dev) - 1;
     }
 

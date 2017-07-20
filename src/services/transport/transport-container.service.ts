@@ -10,9 +10,11 @@ import { LocalTransportService } from './local-transport.service';
 @Injectable()
 export class TransportContainerService {
     public transport: GenericTransportService;
+    private httpTimeout: number;
 
-    constructor(_uri: string) {
-        this.transport = new HttpTransportService(_uri);
+    constructor(_uri: string, httpTimeout: number) {
+        this.transport = new HttpTransportService(_uri, httpTimeout);
+        this.httpTimeout = httpTimeout;
     }
 
     //Set transport uri
@@ -51,11 +53,16 @@ export class TransportContainerService {
 
     setHttpTransport(uri) {
         delete this.transport;
-        this.transport = new HttpTransportService(uri);
+        this.transport = new HttpTransportService(uri, this.httpTimeout);
     }
 
     setLocalTransport(deviceEnumeration: string) {
         delete this.transport;
         this.transport = new LocalTransportService(deviceEnumeration);
+    }
+
+    setHttpTimeout(newHttpTimeout: number) {
+        this.httpTimeout = newHttpTimeout;
+        this.transport.setTimeout(newHttpTimeout);
     }
 }

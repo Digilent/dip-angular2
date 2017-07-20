@@ -45,11 +45,14 @@ export class DeviceService {
     public firmwareRepositoryUrl: string = 'https://s3-us-west-2.amazonaws.com/digilent/Software/OpenScope+MZ/release/without-bootloader';
     public listFirmwareUrl: string = 'https://s3-us-west-2.amazonaws.com/digilent?prefix=Software/OpenScope+MZ/release/without-bootloader';
 
-    constructor(_rootUri: string, deviceDescriptor: any) {
+    private httpTimeout: number;
+
+    constructor(_rootUri: string, deviceDescriptor: any, httpTimeout: number) {
 
         this.descriptorObject = deviceDescriptor;
+        this.httpTimeout = httpTimeout;
         this.rootUri = _rootUri;
-        this.transport = new TransportContainerService(this.rootUri);
+        this.transport = new TransportContainerService(this.rootUri, httpTimeout);
         if (_rootUri === 'local') {
             this.transport.setLocalTransport(deviceDescriptor);
         }

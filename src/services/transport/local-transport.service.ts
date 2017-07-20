@@ -28,6 +28,8 @@ export class LocalTransportService extends GenericTransportService {
         return this.rootUri;
     }
 
+    setTimeout(newTimeout: number) { }
+
     getRequest(requestUrl: string, timeout?: number) {
         return Observable.create((observer) => {
             observer.error('Local transport does not support get requests');

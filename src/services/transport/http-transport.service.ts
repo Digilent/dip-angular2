@@ -15,24 +15,35 @@ export class HttpTransportService extends GenericTransportService {
 
     private start;
     private finish;
+    private timeout: number;
+    private timeoutMinMs: number = 500;
+    private timeoutMaxMs: number = 120000;
 
-    constructor(_rootUri: string) {
-        console.log('Transport HTTP Contructor');
+    constructor(_rootUri: string, timeout: number) {
         super();
-
+        console.log('Transport HTTP Contructor');
         this.rootUri = _rootUri;
         this.streamState = {
             mode: 'off',
             remainingSamples: 0
         }
+        this.timeout = this.forceRange(timeout, this.timeoutMinMs, this.timeoutMaxMs);
     }
 
     getUri() {
         return this.rootUri;
     }
 
+    setTimeout(newTimeout: number): void {
+        this.timeout = this.forceRange(newTimeout, this.timeoutMinMs, this.timeoutMaxMs);
+    }
+
+    private forceRange(val: number, min: number, max: number) {
+        return Math.min(Math.max(min, val), max);
+    }
+
     getRequest(requestUrl: string, timeout?: number): Observable<any> {
-        timeout = timeout == undefined ? 5000 : timeout;
+        timeout = timeout == undefined ? this.timeout : this.forceRange(timeout, this.timeoutMinMs, this.timeoutMaxMs);
         return Observable.create((observer) => {
             let XHR = new XMLHttpRequest();
 
@@ -68,13 +79,14 @@ export class HttpTransportService extends GenericTransportService {
     }
 
     //Data transmission wrapper to avoid duplicate code. 
-    writeRead(endpoint: string, sendData: any, dataType: string): Observable<any> {
-        return this.writeReadHelper(this.rootUri, endpoint, sendData, dataType);
+    writeRead(endpoint: string, sendData: any, dataType: string, timeout?: number): Observable<any> {
+        return this.writeReadHelper(this.rootUri, endpoint, sendData, dataType, timeout);
     }
 
-    writeReadHelper(rootUri: string, endpoint: string, sendData: any, dataType: string): Observable<any> {
+    writeReadHelper(rootUri: string, endpoint: string, sendData: any, dataType: string, timeout?: number): Observable<any> {
         let uri = rootUri + endpoint;
         let body = sendData;
+        timeout = timeout == undefined ? this.timeout : this.forceRange(timeout, this.timeoutMinMs, this.timeoutMaxMs);
         console.log(body);
         return Observable.create((observer) => {
             let XHR = new XMLHttpRequest();
@@ -109,7 +121,7 @@ export class HttpTransportService extends GenericTransportService {
                     XHR.setRequestHeader("Content-Type", "application/octet-stream");
                 }
 
-                XHR.timeout = 5000;
+                XHR.timeout = timeout;
 
                 //Set resposne type as arraybuffer to receive response as bytes
                 XHR.responseType = 'arraybuffer';
