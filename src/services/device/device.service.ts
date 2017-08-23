@@ -392,7 +392,7 @@ export class DeviceService {
         return this._genericResponseHandler(command);
     }
 
-    wifiSetParameters(adapter: string, ssid: string, securityType: 'wep40'|'wep104'|'wpa'|'wpa2', autoConnect: boolean, passphrase?: string, keys?: string, keyIndex?: number): Observable<any> {
+    wifiSetParameters(adapter: string, ssid: string, securityType: 'wep40'|'wep104'|'wpa'|'wpa2'|'open', autoConnect: boolean, passphrase?: string, keys?: string, keyIndex?: number): Observable<any> {
         let command = {
             "device": [{
                 "command": "wifiSetParameters",
@@ -412,6 +412,9 @@ export class DeviceService {
             else {
                 command.device[0]['keys'] = keys;
             }
+        }
+        else if (securityType === 'open') {
+            command.device[0]['passphrase'] = '';
         }
         return this._genericResponseHandler(command);
     }
