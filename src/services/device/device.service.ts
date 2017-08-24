@@ -9,6 +9,7 @@ import { LaInstrumentService } from './instruments/la/la-instrument.service';
 import { OscInstrumentService } from './instruments/osc/osc-instrument.service';
 import { TriggerInstrumentService } from './instruments/trigger/trigger-instrument.service';
 import { GpioInstrumentService } from './instruments/gpio/gpio-instrument.service';
+import { LoggerInstrumentService } from './instruments/logger/logger-instrument.service';
 import { FileService } from './file.service';
 
 //Services
@@ -31,14 +32,16 @@ export class DeviceService {
         la: LaInstrumentService,
         osc: OscInstrumentService,
         trigger: TriggerInstrumentService,
-        gpio: GpioInstrumentService
+        gpio: GpioInstrumentService,
+        logger: LoggerInstrumentService
     } = {
         awg: null,
         dc: null,
         la: null,
         osc: null,
         trigger: null,
-        gpio: null
+        gpio: null,
+        logger: null
     };
     public file: FileService;
 
@@ -67,6 +70,7 @@ export class DeviceService {
         this.instruments.osc = new OscInstrumentService(this.transport, deviceDescriptor.osc);
         this.instruments.trigger = new TriggerInstrumentService(this.transport, 'deviceDescriptor.trigger');
         this.instruments.gpio = new GpioInstrumentService(this.transport, deviceDescriptor.gpio);
+        this.instruments.logger = new LoggerInstrumentService(this.transport, 'deviceDescriptor.logger');
         this.file = new FileService(this.transport);
     }
 

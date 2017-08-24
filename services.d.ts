@@ -18,6 +18,12 @@ export * from './dist/transport/http-transport.service';
 export * from './dist/transport/local-transport.service';
 export * from './dist/transport/transport-container.service';
 export * from './dist/utilities/command-utility.service';
+export * from './dist/device/instruments/logger/logger-command.service';
+export * from './dist/device/instruments/logger/logger-instrument.service';
+export * from './dist/device/instruments/logger/analog/logger-analog-channel.service';
+export * from './dist/device/instruments/logger/analog/logger-analog-instrument.service';
+export * from './dist/device/instruments/logger/digital/logger-digital-channel.service';
+export * from './dist/device/instruments/logger/digital/logger-digital-instrument.service';
 
 //Simulated device
 export * from './dist/simulated-device/simulated-device.service';

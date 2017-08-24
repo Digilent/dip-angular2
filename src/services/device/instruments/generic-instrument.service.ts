@@ -8,9 +8,9 @@ import { TransportContainerService } from '../../transport/transport-container.s
 @Injectable()
 export abstract class GenericInstrumentService {
 
-    protected transport: TransportContainerService;
+    readonly transport: TransportContainerService;
 
-    protected endpoint: string = '';
+    readonly endpoint: string = '';
     abstract numChans: number;
 
     constructor(_transport: TransportContainerService, _endpoint: string) {
@@ -37,10 +37,22 @@ export abstract class GenericInstrumentService {
                         return;
                     }
                     for (let instrument in data) {
-                        for (let channel in data[instrument]) {
-                            if (data[instrument][channel][0].statusCode > 0) {
-                                observer.error(data);
-                                return;
+                        if (instrument === 'log') {
+                            for (let chanType in data[instrument]) {
+                                for (let channel in data[instrument][chanType]) {
+                                    if (data[instrument][chanType][channel][0].statusCode > 0) {
+                                        observer.error(data);
+                                        return;
+                                    }
+                                }
+                            } 
+                        }
+                        else {
+                            for (let channel in data[instrument]) {
+                                if (data[instrument][channel][0].statusCode > 0) {
+                                    observer.error(data);
+                                    return;
+                                }
                             }
                         }
                     }

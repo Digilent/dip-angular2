@@ -79,11 +79,11 @@ export class HttpTransportService extends GenericTransportService {
     }
 
     //Data transmission wrapper to avoid duplicate code. 
-    writeRead(endpoint: string, sendData: any, dataType: string, timeout?: number): Observable<any> {
+    writeRead(endpoint: string, sendData: any, dataType: 'json' | 'binary', timeout?: number): Observable<any> {
         return this.writeReadHelper(this.rootUri, endpoint, sendData, dataType, timeout);
     }
 
-    writeReadHelper(rootUri: string, endpoint: string, sendData: any, dataType: string, timeout?: number): Observable<any> {
+    writeReadHelper(rootUri: string, endpoint: string, sendData: any, dataType: 'json' | 'binary', timeout?: number): Observable<any> {
         let uri = rootUri + endpoint;
         let body = sendData;
         timeout = timeout == undefined ? this.timeout : this.forceRange(timeout, this.timeoutMinMs, this.timeoutMaxMs);

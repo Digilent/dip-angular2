@@ -30,6 +30,12 @@
         "src/services/device/instruments/la/la-instrument.service.ts",
         "src/services/device/instruments/trigger/trigger-channel.service.ts",
         "src/services/device/instruments/trigger/trigger-instrument.service.ts",
+        "src/services/device/instruments/logger/logger-command.service.ts",
+        "src/services/device/instruments/logger/logger-instrument.service.ts",
+        "src/services/device/instruments/logger/analog/logger-analog-channel.service.ts",
+        "src/services/device/instruments/logger/analog/logger-analog-instrument.service.ts",
+        "src/services/device/instruments/logger/digital/logger-digital-channel.service.ts",
+        "src/services/device/instruments/logger/digital/logger-digital-instrument.service.ts",
         "src/services/simulated-device/simulated-device-helper.service.ts",
         "src/services/simulated-device/simulated-device.service.ts",
         "src/services/simulated-device/instruments/simulated-awg.service.ts",
@@ -42,7 +48,7 @@
         "src/services/transport/local-transport.service.ts",
         "src/services/transport/http-transport.service.ts",
         "src/services/transport/generic-transport.service.ts",
-        "src/services/utilities/command-utility.service.ts"        
+        "src/services/utilities/command-utility.service.ts"    
     ],
     "angularCompilerOptions": {
         "genDir": "./dist",
