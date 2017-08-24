@@ -32,8 +32,8 @@ export class LoggerDigitalInstrumentService extends GenericInstrumentService {
         }
     }
 
-    setParameters(chans: number[], maxSampleCounts: number[], gains: number[], vOffsets: number[], sampleFreqs: number[], startDelays: number[], overflows: Array<'stop' | 'circular'>, storageLocations: string[], uris: string[]) {
-        return this.loggerCommandService.analogSetParameters(chans, maxSampleCounts, gains, vOffsets, sampleFreqs, startDelays, overflows, storageLocations, uris);
+    setParameters(chans: number[], maxSampleCounts: number[], sampleFreqs: number[], startDelays: number[], overflows: Array<'stop' | 'circular'>, storageLocations: string[], uris: string[], bitMasks: number[]) {
+        return this.loggerCommandService.digitalSetParameters(chans, maxSampleCounts, sampleFreqs, startDelays, overflows, storageLocations, uris, bitMasks);
     }
 
     run(instrument: LoggerInstruments, chans: number[]) {
