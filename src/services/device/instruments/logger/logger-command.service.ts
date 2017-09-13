@@ -4,13 +4,18 @@ import 'rxjs/Rx';
 
 //Services
 import { GenericInstrumentService } from '../generic-instrument.service';
+import { CommandUtilityService } from '../../../utilities/command-utility.service';
 
 @Injectable()
 export class LoggerCommandService {
     private instrumentRef: GenericInstrumentService;
+    private commandUtilityService: CommandUtilityService;
 
-    constructor(_loggerInstrumentRef: GenericInstrumentService) {
+    constructor(
+        _loggerInstrumentRef: GenericInstrumentService
+    ) {
         this.instrumentRef = _loggerInstrumentRef;
+        this.commandUtilityService = new CommandUtilityService();
     }
 
     analogSetParametersJson(chans: number[], maxSampleCounts: number[], gains: number[], vOffsets: number[], sampleFreqs: number[], startDelays: number[], overflows: Array<'stop' | 'circular'>, storageLocations: string[], uris: string[]) {
@@ -171,18 +176,49 @@ export class LoggerCommandService {
     read(instrument: LoggerInstruments, chans: number[], startIndices: number[], counts: number[]): Observable<any> {
         let command = this.readJson(instrument, chans, startIndices, counts);
         return Observable.create((observer) => {
-            this.instrumentRef.transport.writeRead('/', command, 'binary').subscribe(
-                (data) => {
-                    console.log(data);
-                    observer.next(data);
-                    observer.complete();
-                },
-                (err) => {
-                    console.log(err);
-                    observer.error(err);
-                },
-                () => { } 
-            );
+            this.instrumentRef.transport.writeRead('/', JSON.stringify(command), 'binary')
+                .flatMap((data) => {
+                    return this.commandUtilityService.observableParseChunkedTransfer(data);
+                })
+                .subscribe(
+                    (data) => {
+                        let returnObject = {
+                            cmdRespObj: data.json,
+                            instruments: {}
+                        };
+                        let command = data.json;
+                        console.log(command);
+                        for (let instrument in command.log) {
+                            returnObject.instruments[instrument] = {};
+                            for (let channel in command.log[instrument]) {
+                                returnObject.instruments[instrument][channel] = {};
+                                if (command.log[instrument][channel][0].statusCode > 0) {
+                                    observer.error('StatusCode error: ' + instrument + ' Ch ' + channel);
+                                    return;
+                                }
+                                if (command.log[instrument][channel][0].binaryLength === 0) {
+                                    observer.error('No data received on ' + instrument + ' Ch ' + channel);
+                                    return;
+                                }
+                                let binaryOffset = command.log[instrument][channel][0].binaryOffset / 2;
+                                let binaryData = data.typedArray.slice(binaryOffset, binaryOffset + command.log[instrument][channel][0].binaryLength / 2);
+                                let untypedArray = Array.prototype.slice.call(binaryData);
+                                let scaledArray = untypedArray.map((voltage) => {
+                                    return voltage / 1000;
+                                });
+                                Object.assign(returnObject.instruments[instrument][channel], command.log[instrument][channel][0]);
+                                returnObject.instruments[instrument][channel]['data'] = scaledArray;
+                            }
+                        }
+                        observer.next(returnObject);
+                        observer.complete();
+                    },
+                    (err) => {
+                        console.log(err);
+                        observer.error(err);
+                    },
+                    () => { } 
+                );
 
         });
     }

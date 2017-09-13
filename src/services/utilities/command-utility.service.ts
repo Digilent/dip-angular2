@@ -11,7 +11,10 @@ export class CommandUtilityService {
         return new Promise((resolve, reject) => {
             let firstChar = String.fromCharCode.apply(null, new Uint8Array(data.slice(0, 1)));
             if (isNaN(parseInt(firstChar, 16))) {
-                reject('json or bad packet');
+                reject({
+                    message: 'json or bad packet',
+                    payload: data
+                });
                 return;
             }
             let chunkGuardLength = 100;
@@ -58,7 +61,10 @@ export class CommandUtilityService {
         return Observable.create((observer) => {
             let firstChar = String.fromCharCode.apply(null, new Uint8Array(data.slice(0, 1)));
             if (isNaN(parseInt(firstChar, 16))) {
-                observer.error('json or bad packet');
+                observer.error({
+                    message: 'json or bad packet',
+                    payload: data
+                });
                 return;
             }
             let chunkGuardLength = 100;
