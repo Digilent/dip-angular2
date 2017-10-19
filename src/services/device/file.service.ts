@@ -71,37 +71,18 @@ export class FileService {
                 path: path
             }]
         };
-        return Observable.create((observer) => {
-            this.transport.writeRead('/', JSON.stringify(command), 'json').subscribe(
-                (arrayBuffer) => {
-                    let data;
-                    try {
-                        let stringify = String.fromCharCode.apply(null, new Uint8Array(arrayBuffer.slice(0)));
-                        data = JSON.parse(stringify);
-                    }
-                    catch (e) {
-                        observer.error(e);
-                        return;
-                    }
-                    if (data == undefined || data.agent != undefined) {
-                        observer.error(data);
-                        return;
-                    }
-                    if (data.file == undefined || data.file[0] == undefined || data.file[0].statusCode !== 0) {
-                        observer.error(data);
-                        return;
-                    }
-                    observer.next(data);
-                    observer.complete();
-                },
-                (err) => {
-                    observer.error(err);
-                },
-                () => {
-                    observer.complete();
-                }
-            );
-        });
+        return this.genericResponse(command);
+    }
+
+    delete(location: string, path: string): Observable<any> {
+        let command = {
+            file: [{
+                command: 'delete',
+                type: location,
+                path: path
+            }]
+        };
+        return this.genericResponse(command);
     }
 
     //Set the output voltage of the specified DC power supply channel.
@@ -142,6 +123,40 @@ export class FileService {
                         () => { }
                     );
 
+                },
+                (err) => {
+                    observer.error(err);
+                },
+                () => {
+                    observer.complete();
+                }
+            );
+        });
+    }
+
+    private genericResponse(command): Observable<any> {
+        return Observable.create((observer) => {
+            this.transport.writeRead('/', JSON.stringify(command), 'json').subscribe(
+                (arrayBuffer) => {
+                    let data;
+                    try {
+                        let stringify = String.fromCharCode.apply(null, new Uint8Array(arrayBuffer.slice(0)));
+                        data = JSON.parse(stringify);
+                    }
+                    catch (e) {
+                        observer.error(e);
+                        return;
+                    }
+                    if (data == undefined || data.agent != undefined) {
+                        observer.error(data);
+                        return;
+                    }
+                    if (data.file == undefined || data.file[0] == undefined || data.file[0].statusCode !== 0) {
+                        observer.error(data);
+                        return;
+                    }
+                    observer.next(data);
+                    observer.complete();
                 },
                 (err) => {
                     observer.error(err);

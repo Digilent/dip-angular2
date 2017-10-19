@@ -34,7 +34,7 @@ export class LoggerCommandService {
                         "maxSampleCount": maxSampleCounts[index],
                         "gain": gains[index],
                         "vOffset": Math.round(vOffsets[index] * 1000),
-                        "sampleFreq": Math.round(sampleFreqs[index] * 1000),
+                        "sampleFreq": Math.round(sampleFreqs[index] * 1000000),
                         "startDelay": Math.round(startDelays[index] * Math.pow(10, 12)),
                         "overflow": overflows[index],
                         "storageLocation": storageLocations[index],
@@ -76,7 +76,7 @@ export class LoggerCommandService {
                         "command": "setParameters",
                         "bitMask": bitMasks[index],
                         "maxSampleCount": maxSampleCounts[index],
-                        "sampleFreq": Math.round(sampleFreqs[index] * 1000),
+                        "sampleFreq": Math.round(sampleFreqs[index] * 1000000),
                         "startDelay": Math.round(startDelays[index] * Math.pow(10, 12)), //picoseconds
                         "overflow": overflows[index],
                         "storageLocation": storageLocations[index],

@@ -58,6 +58,11 @@ export class DeviceManagerService {
                         return;
                     }
 
+                    if (response.device == undefined || response.device[0] == undefined) {
+                        observer.error(response);
+                        return;
+                    }
+
                     observer.next(response);
                     observer.complete();
                 },
