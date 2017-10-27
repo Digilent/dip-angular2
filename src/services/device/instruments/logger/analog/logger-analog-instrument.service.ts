@@ -16,17 +16,26 @@ export class LoggerAnalogInstrumentService extends GenericInstrumentService {
 
     readonly chans: LoggerAnalogChannelService[] = [];
     readonly numChans: number = 0;
+    readonly fileFormat: number = -1;
+    readonly fileRevision: number = -1;
     private loggerCommandService: LoggerCommandService = new LoggerCommandService(this);
 
     constructor(_transport: TransportContainerService, _loggerInstrumentDescriptor: any) {
         super(_transport, '/');
+
+        if (_loggerInstrumentDescriptor == undefined) {
+            return;
+        }
+
+        this.fileFormat = _loggerInstrumentDescriptor.fileFormat;
+        this.fileRevision = _loggerInstrumentDescriptor.fileRevision;
 
         //Populate logger analog supply parameters
         this.numChans = _loggerInstrumentDescriptor.numChans;
 
         //Populate channels        
         for (let key in _loggerInstrumentDescriptor) {
-            if (key !== 'numChans') {
+            if (parseInt(key).toString() === key && !isNaN(parseInt(key))) {
                 this.chans.push(new LoggerAnalogChannelService(_loggerInstrumentDescriptor[key]));
             }
         }

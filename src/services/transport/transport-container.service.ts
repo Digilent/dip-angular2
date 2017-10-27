@@ -32,8 +32,8 @@ export class TransportContainerService {
     }
 
     //Call writeRead on transport component
-    writeRead(endpoint: string, sendData: any, dataType: string): Observable<any> {
-        return this.transport.writeRead(endpoint, sendData, dataType);
+    writeRead(endpoint: string, sendData: any, dataType: string, timeoutOverride?: number): Observable<any> {
+        return this.transport.writeRead(endpoint, sendData, dataType, timeoutOverride);
     }
 
     //Call streamFrom on stransport component

@@ -70,7 +70,7 @@ export class DeviceService {
         this.instruments.osc = new OscInstrumentService(this.transport, deviceDescriptor.osc);
         this.instruments.trigger = new TriggerInstrumentService(this.transport, 'deviceDescriptor.trigger');
         this.instruments.gpio = new GpioInstrumentService(this.transport, deviceDescriptor.gpio);
-        this.instruments.logger = new LoggerInstrumentService(this.transport, 'deviceDescriptor.logger');
+        this.instruments.logger = new LoggerInstrumentService(this.transport, deviceDescriptor.log);
         this.file = new FileService(this.transport);
     }
 

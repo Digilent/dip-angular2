@@ -74,6 +74,17 @@ export class FileService {
         return this.genericResponse(command);
     }
 
+    getFileSize(location: string, path: string): Observable<any> {
+        let command = {
+            file: [{
+                command: 'getFileSize',
+                type: location,
+                path: path
+            }]
+        }
+        return this.genericResponse(command);
+    }
+
     delete(location: string, path: string): Observable<any> {
         let command = {
             file: [{
@@ -86,7 +97,7 @@ export class FileService {
     }
 
     //Set the output voltage of the specified DC power supply channel.
-    read(location: string, path: string, filePosition: number, length: number): Observable<any> {
+    read(location: string, path: string, filePosition: number, length: number, timeoutOverride?: number): Observable<any> {
         let command = {
             file: [{
                 command: 'read',
@@ -97,7 +108,7 @@ export class FileService {
             }]
         }
         return Observable.create((observer) => {
-            this.transport.writeRead('/', JSON.stringify(command), 'json').subscribe(
+            this.transport.writeRead('/', JSON.stringify(command), 'json', timeoutOverride).subscribe(
                 (arrayBuffer) => {
                     this.commandUtilService.observableParseChunkedTransfer(arrayBuffer, 'u8').subscribe(
                         (data) => {
@@ -113,7 +124,7 @@ export class FileService {
                             }
                             observer.next({
                                 jsonObject: jsonObject,
-                                file: String.fromCharCode.apply(null, binaryData)
+                                file: this.safeStringBinary(binaryData)
                             });
                             observer.complete();
                         },
@@ -132,6 +143,14 @@ export class FileService {
                 }
             );
         });
+    }
+
+    private safeStringBinary(binaryData: Uint8Array): string {
+        let returnString = '';
+        for (let i = 0; i < binaryData.length; i++) {
+            returnString += String.fromCharCode(binaryData[i]);
+        }
+        return returnString;
     }
 
     private genericResponse(command): Observable<any> {

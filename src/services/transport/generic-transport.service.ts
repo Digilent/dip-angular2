@@ -9,7 +9,7 @@ export abstract class GenericTransportService {
 
     constructor() { }
 
-    abstract writeRead(endpoint: string, sendData: any, dataType: string): Observable<any>;
+    abstract writeRead(endpoint: string, sendData: any, dataType: string, timeoutOverride?: number): Observable<any>;
     abstract streamFrom(endpoint: string, sendData: any, dataType: string, delay?: number): Observable<any>;
     abstract stopStream(): void;
     abstract getRequest(requestUrl: string, timeout?: number): Observable<any>;

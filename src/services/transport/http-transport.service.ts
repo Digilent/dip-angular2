@@ -17,7 +17,7 @@ export class HttpTransportService extends GenericTransportService {
     private finish;
     private timeout: number;
     private timeoutMinMs: number = 500;
-    private timeoutMaxMs: number = 120000;
+    private timeoutMaxMs: number = 86400000; //One day should be enough...
 
     constructor(_rootUri: string, timeout: number) {
         super();
@@ -79,8 +79,8 @@ export class HttpTransportService extends GenericTransportService {
     }
 
     //Data transmission wrapper to avoid duplicate code. 
-    writeRead(endpoint: string, sendData: any, dataType: 'json' | 'binary', timeout?: number): Observable<any> {
-        return this.writeReadHelper(this.rootUri, endpoint, sendData, dataType, timeout);
+    writeRead(endpoint: string, sendData: any, dataType: 'json' | 'binary', timeoutOverride?: number): Observable<any> {
+        return this.writeReadHelper(this.rootUri, endpoint, sendData, dataType, timeoutOverride);
     }
 
     writeReadHelper(rootUri: string, endpoint: string, sendData: any, dataType: 'json' | 'binary', timeout?: number): Observable<any> {
