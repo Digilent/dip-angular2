@@ -9,6 +9,7 @@ import { SimulatedOscService } from './instruments/simulated-osc.service';
 import { SimulatedTriggerService } from './instruments/simulated-trigger.service';
 import { SimulatedLaService } from './instruments/simulated-la.service';
 import { SimulatedGpioService } from './instruments/simulated-gpio.service';
+import { SimulatedLoggerService } from './instruments/simulated-logger.service';
 
 //Services
 import { SimulatedDeviceHelperService } from './simulated-device-helper.service';
@@ -30,6 +31,7 @@ export class SimulatedDeviceService {
     public gpio: SimulatedGpioService;
     public simDevService: SimulatedDeviceHelperService;
     public commandUtilityService: CommandUtilityService;
+    public logger: SimulatedLoggerService;
 
     constructor(enumeration) {
         this.descriptor = enumeration;
@@ -42,6 +44,7 @@ export class SimulatedDeviceService {
         this.trigger = new SimulatedTriggerService(this.simDevService);
         this.la = new SimulatedLaService(this.simDevService);
         this.gpio = new SimulatedGpioService(this.simDevService);
+        this.logger = new SimulatedLoggerService(this.simDevService);
     }
 
     send(command: any): Observable<any> {
