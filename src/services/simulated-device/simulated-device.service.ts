@@ -72,6 +72,28 @@ export class SimulatedDeviceService {
                     sumStatusCode += responseObject[instrument].statusCode;
                 }
 
+            } else if (typeof event[instrument] === 'object') {
+                if (instrument === 'log') {
+                    // each channel in the digital/analog object has a command to process
+                    let analogObj = event[instrument].analog; // logger has analog/digital channel types
+                    responseObject[instrument]['analog'] = {};
+
+                    for (let channel in analogObj) {
+                        let commandArray = analogObj[channel];
+                        responseObject[instrument].analog[channel] = [];
+
+                        for (let commandObj of commandArray) {
+                            let activeIndex = responseObject[instrument].analog[channel].push(this.processCommands(instrument, commandObj, [channel])) - 1;
+                            sumStatusCode += responseObject[instrument].analog[channel][activeIndex].statusCode;
+
+                            if (commandObj.command === "read") {
+                                binaryDataFlag = 1;
+                            }
+                        }
+                    }
+
+                    return; // skip doing loop2 because it doesn't pertain to the logger 
+                }
             }
 
             for (let channel in event[instrument]) {
@@ -109,6 +131,13 @@ export class SimulatedDeviceService {
             //---------- Device ----------
             case 'deviceenumerate':
                 return this.descriptor;
+            case 'devicestorageGetLocations':
+                return {
+                    command: 'storageGetLocations',
+                    statusCode: 0,
+                    storageLocations: [],
+                    wait: 0
+                };
 
             //---------- AWG ----------            
             case 'awgsetArbitraryWaveform':
@@ -156,10 +185,22 @@ export class SimulatedDeviceService {
             case 'laread':
                 return this.la.read(params[0]);
 
+            //---------- LOGGER ----------  
+            case 'loggetCurrentState':
+                return this.logger.getCurrentState(params[0]);
+            case 'logstop':
+                return this.logger.stop(params[0]);
+            case 'logsetParameters':
+                return this.logger.setParameters(params[0], commandObject);
+            case 'logrun':
+                return this.logger.run(params[0]);
+            case 'logread':
+                return this.logger.read(params[0]);
+
             default:
                 return {
                     statusCode: 1,
-                    errorMessage: 'Not a recognized command'
+                    errorMessage: `${command} not a recognized command`
                 };
         }
     }
@@ -190,24 +231,59 @@ export class SimulatedDeviceService {
                     delete commandObject[instrument][channel][0].y;
                 }
             }
-
         }
+        
+        // note(andrew): if the container is empty then that means the commandObject instrument
+        // is the logger, because the trigger doesn't get set when logging, and doesn't
+        // ever get 'log' as a target
+        if(Object.keys(binaryDataContainer).length === 0 && commandObject["log"] !== undefined) {
+            binaryDataContainer["log"] = {};
+
+            for (let channelType in commandObject["log"]) {
+                binaryDataContainer.log[channelType] = {};
+
+                for (let channel in commandObject["log"][channelType]) {
+                    binaryDataContainer.log[channelType][channel] = commandObject.log[channelType][channel][0].y;
+                    commandObject.log[channelType][channel][0].binaryOffset = binaryOffset;
+                    binaryOffset += commandObject.log[channelType][channel][0].binaryLength;
+                    delete commandObject.log[channelType][channel][0].y;
+                }
+            }
+        }
+
         let buf = new ArrayBuffer(binaryOffset);
         let bufView = new Uint8Array(buf);
         let binaryInjectorIndex = 0;
         let prevLength = 0;
         for (let instrument in binaryDataContainer) {
-            for (let channel in binaryDataContainer[instrument]) {
-                let unsignedConversion = new Uint8Array(binaryDataContainer[instrument][channel].buffer);
-                binaryInjectorIndex += prevLength + unsignedConversion.length;
-                for (let i = prevLength, j = 0; i < binaryInjectorIndex; i = i + 2, j = j + 2) {
-                    bufView[i] = unsignedConversion[j];
-                    bufView[i + 1] = unsignedConversion[j + 1];
+            if (instrument === "log") { // handle logger instrument differently
+                for (let channelType in binaryDataContainer.log) {
+                    for (let channel in binaryDataContainer.log[channelType]) {
+                        let unsignedConversion = new Uint8Array(binaryDataContainer.log[channelType][channel].buffer);
+                        binaryInjectorIndex += prevLength + unsignedConversion.length;
+                        
+                        for (let i = prevLength, j = 0; i < binaryInjectorIndex; i = i + 2, j = j + 2) {
+                            bufView[i] = unsignedConversion[j];
+                            bufView[i + 1] = unsignedConversion[j + 1];
+                        }
+
+                        prevLength = unsignedConversion.length;
+                    }
                 }
-                prevLength = unsignedConversion.length;
-                if (instrument === 'la') { break; }
+            } else {
+                for (let channel in binaryDataContainer[instrument]) {
+                    let unsignedConversion = new Uint8Array(binaryDataContainer[instrument][channel].buffer);
+                    binaryInjectorIndex += prevLength + unsignedConversion.length;
+                    for (let i = prevLength, j = 0; i < binaryInjectorIndex; i = i + 2, j = j + 2) {
+                        bufView[i] = unsignedConversion[j];
+                        bufView[i + 1] = unsignedConversion[j + 1];
+                    }
+                    prevLength = unsignedConversion.length;
+                    if (instrument === 'la') { break; }
+                }
             }
         }
+        
         return this.commandUtilityService.createChunkedArrayBuffer(commandObject, bufView.buffer).buffer;
     }
 }
