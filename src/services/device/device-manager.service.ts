@@ -112,51 +112,50 @@ export class DeviceManagerService {
 
     connectLocal(deviceName: string): Observable<any> {
         return Observable.create((observer) => {
-            if (deviceName === 'OpenScope MZ') {
-                let XHR = new XMLHttpRequest();
-                // We define what will happen if the data are successfully sent
-                XHR.addEventListener("load", function (event: any) {
-                    let enumerationObject;
-                    try {
-                        enumerationObject = JSON.parse(event.currentTarget.response);
-                    }
-                    catch (e) {
-                        observer.error(e);
-                        return;
-                    }
-                    this.transport.setLocalTransport(enumerationObject);
-                    let command = {
-                        'device': [
-                            {
-                                command: 'enumerate'
-                            }
-                        ]
-                    }
-                    this.transport.writeRead('/', JSON.stringify(command), 'json').subscribe(
-                        (deviceDescriptor) => {
-                            let response = JSON.parse(String.fromCharCode.apply(null, new Int8Array(deviceDescriptor.slice(0))));
-                            observer.next(response);
-                            observer.complete();
-                        },
-                        (err) => {
-                            observer.error(err);
-                        },
-                        () => {
-                            observer.complete();
-                        });
-                }.bind(this));
+            let XHR = new XMLHttpRequest();
 
-                // We define what will happen in case of error
-                XHR.addEventListener("error", function (event) {
-                    observer.error('TX Error: ', event);
-                });
+            deviceName = deviceName.replace(" ", "-").toLowerCase();
+            // We define what will happen if the data are successfully sent
+            XHR.addEventListener("load", function (event: any) {
+                let enumerationObject;
+                try {
+                    enumerationObject = JSON.parse(event.currentTarget.response);
+                }
+                catch (e) {
+                    observer.error(e);
+                    return;
+                }
+                this.transport.setLocalTransport(enumerationObject);
+                let command = {
+                    'device': [
+                        {
+                            command: 'enumerate'
+                        }
+                    ]
+                }
+                this.transport.writeRead('/', JSON.stringify(command), 'json').subscribe(
+                    (deviceDescriptor) => {
+                        let response = JSON.parse(String.fromCharCode.apply(null, new Int8Array(deviceDescriptor.slice(0))));
+                        observer.next(response);
+                        observer.complete();
+                    },
+                    (err) => {
+                        observer.error(err);
+                    },
+                    () => {
+                        observer.complete();
+                    });
+            }.bind(this));
 
+            // We define what will happen in case of error
+            XHR.addEventListener("error", function (event) {
+                observer.error('TX Error: ', event);
+            });
 
-                // We set up our request
-                XHR.open("GET", 'assets/devices/openscope-mz/descriptor.json');
+            // We set up our request
+            XHR.open("GET", 'assets/devices/openscope-mz/descriptor.json');
 
-                XHR.send();
-            }
+            XHR.send();
         });
     }
 
