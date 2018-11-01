@@ -66,8 +66,8 @@ export class DeviceService {
         this.macAddress = deviceDescriptor.macAddress;
         this.instruments.awg = new AwgInstrumentService(this.transport, deviceDescriptor.awg);
         this.instruments.dc = new DcInstrumentService(this.transport, deviceDescriptor.dc);
-        this.instruments.la = new LaInstrumentService(this.transport, deviceDescriptor.la);
-        this.instruments.osc = new OscInstrumentService(this.transport, deviceDescriptor.osc);
+        this.instruments.la = new LaInstrumentService(this.transport, deviceDescriptor.la || { numChans: 0 });
+        this.instruments.osc = new OscInstrumentService(this.transport, deviceDescriptor.osc || { numChans: 0 });
         this.instruments.trigger = new TriggerInstrumentService(this.transport, 'deviceDescriptor.trigger');
         this.instruments.gpio = new GpioInstrumentService(this.transport, deviceDescriptor.gpio);
         this.instruments.logger = new LoggerInstrumentService(this.transport, deviceDescriptor.log);
@@ -288,10 +288,11 @@ export class DeviceService {
         return this._genericResponseHandler(command);
     }
 
-    calibrationStart(): Observable<any> {
+    calibrationStart(instruments?: CalibrationInstruments): Observable<any> {
         let command = {
             "device": [{
-                command: "calibrationStart"
+                command: "calibrationStart",
+                ...instruments
             }]
         }
         return this._genericResponseHandler(command);
@@ -465,4 +466,10 @@ export class DeviceService {
         return this._genericResponseHandler(command);
     }
 
+}
+
+interface CalibrationInstruments {
+    dc?: number[]
+    awg?: number
+    daq?: number[]
 }
