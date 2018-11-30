@@ -18,7 +18,7 @@ export class SimulatedLoggerService {
 
     private startIndices: number[] = [0, 0, 0, 0, 0, 0, 0, 0]; // note(andrew): populate these values according to the # of channels the device has
 
-    private timeOfLastRead: number = Date.now();
+    private timeOfLastRead: number[] = [null, null, null, null, null, null, null, null];
 
     constructor(_simulatedDeviceService: SimulatedDeviceHelperService) {
         this.simulatedDeviceService = _simulatedDeviceService;
@@ -74,7 +74,7 @@ export class SimulatedLoggerService {
     public run(chan: number) {
         --chan;
 
-        this.timeOfLastRead = Date.now();
+        this.timeOfLastRead[chan] = Date.now();
         this.states[chan] = "running";
         this.startIndices[chan] = 0;
 
@@ -97,7 +97,11 @@ export class SimulatedLoggerService {
         }
     }
 
-    private drawSine(awgSettings, chan, T) {
+    private drawSine(awgSettings, chan) {
+        var now = Date.now();
+        var T = now - this.timeOfLastRead[chan];
+        this.timeOfLastRead[chan] = now;
+        
         // grab sample rate from the AWG
         let sigFreq = awgSettings.signalFreq;
         let vpp = awgSettings.vpp;
@@ -136,7 +140,11 @@ export class SimulatedLoggerService {
         }
     }
 
-    drawSquare(awgSettings, chan, T) {
+    drawSquare(awgSettings, chan) {
+        var now = Date.now();
+        var T = now - this.timeOfLastRead[chan];
+        this.timeOfLastRead[chan] = now;
+        
         //Set default values 
         let sigFreq = awgSettings.signalFreq;
         let vpp = awgSettings.vpp;
@@ -182,7 +190,11 @@ export class SimulatedLoggerService {
         };
     }
 
-    drawTriangle(awgSettings, chan, T) {
+    drawTriangle(awgSettings, chan) {
+        var now = Date.now();
+        var T = now - this.timeOfLastRead[chan];
+        this.timeOfLastRead[chan] = now;
+        
         let sigFreq = awgSettings.signalFreq;
         let vpp = awgSettings.vpp;
         let sampleRate = this.sampleFreqs[chan] || 6.25e9;
@@ -221,7 +233,11 @@ export class SimulatedLoggerService {
 
     }
 
-    drawSawtooth(awgSettings, chan, T) { 
+    drawSawtooth(awgSettings, chan) { 
+        var now = Date.now();
+        var T = now - this.timeOfLastRead[chan];
+        this.timeOfLastRead[chan] = now;
+        
         let sigFreq = awgSettings.signalFreq; //in mHz
         let vpp = awgSettings.vpp; //mV
         let sampleRate = this.sampleFreqs[chan] || 6.25e9;
@@ -261,7 +277,11 @@ export class SimulatedLoggerService {
 
     }
 
-    drawDc(awgSettings, chan, T) {
+    drawDc(awgSettings, chan) {
+        var now = Date.now();
+        var T = now - this.timeOfLastRead[chan];
+        this.timeOfLastRead[chan] = now;
+        
         let sampleRate = this.sampleFreqs[chan] || 6.25e9;
         let numSamples = (sampleRate / 1e6) * (T / 1000);
         let vOffset = awgSettings.vOffset;
@@ -294,9 +314,13 @@ export class SimulatedLoggerService {
         };
     }
 
-    private drawDefault(chan: number, timeSinceLastRead) {
+    private drawDefault(chan: number) {
+        var now = Date.now();
+        var T = now - this.timeOfLastRead[chan];
+        this.timeOfLastRead[chan] = now;
+        
         let sampleRate = this.sampleFreqs[chan] || 6.25e9;
-        let numSamples = (sampleRate / 1e6) * (timeSinceLastRead / 1000);
+        let numSamples = (sampleRate / 1e6) * (T / 1000);
         let vOffset = 0;
 
         let dt = 1e6 / sampleRate;
@@ -330,10 +354,6 @@ export class SimulatedLoggerService {
     public read(chan) {
         --chan;
 
-        let now = Date.now();
-        let T = now - this.timeOfLastRead;
-        this.timeOfLastRead = now;
-
         let awgSettings = this.simulatedDeviceService.getAwgSettings(1);
         console.log("AWG Settings:", awgSettings);
         
@@ -341,24 +361,24 @@ export class SimulatedLoggerService {
 
         switch(awgSettings.signalType) {
             case 'sine':
-                responseObj = this.drawSine(awgSettings, chan, T);
+                responseObj = this.drawSine(awgSettings, chan);
                 break;
             case 'triangle':
-                responseObj = this.drawTriangle(awgSettings, chan, T);
+                responseObj = this.drawTriangle(awgSettings, chan);
                 console.log(responseObj);
                 break;
             case 'sawtooth':
-                responseObj = this.drawSawtooth(awgSettings, chan, T);
+                responseObj = this.drawSawtooth(awgSettings, chan);
                 break;
             case 'square':
-                responseObj = this.drawSquare(awgSettings, chan, T);
+                responseObj = this.drawSquare(awgSettings, chan);
                 console.log(responseObj);
                 break;
             case 'dc':
-                responseObj = this.drawDc(awgSettings, chan, T);
+                responseObj = this.drawDc(awgSettings, chan);
                 break;
             default:
-                responseObj = this.drawDefault(chan, T);
+                responseObj = this.drawDefault(chan);
                 break;
         }
         
