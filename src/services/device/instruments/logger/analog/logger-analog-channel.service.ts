@@ -27,7 +27,7 @@ export class LoggerAnalogChannelService {
         this.sampleDataType = loggerChannelDescriptor.sampleDataType;
         this.sampleFreqUnits = loggerChannelDescriptor.sampleFreqUnits;
         this.sampleFreqMin = loggerChannelDescriptor.sampleFreqMin;
-        this.sampleFreqMax = loggerChannelDescriptor.sampleFreqMax;
+        this.sampleFreqMax = loggerChannelDescriptor.sampleFreqMax || loggerChannelDescriptor.adcAggregateSampleFreq;
         this.delayUnits = loggerChannelDescriptor.delayUnits;
         this.delayMax = loggerChannelDescriptor.delayMax;
         this.delayMin = loggerChannelDescriptor.delayMin;

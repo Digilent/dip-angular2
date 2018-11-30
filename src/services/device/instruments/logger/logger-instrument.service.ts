@@ -14,7 +14,8 @@ export class LoggerInstrumentService {
     readonly digital: LoggerDigitalInstrumentService;
 
     constructor(_transport: TransportContainerService, _loggerInstrumentDescriptor: any) {
-        this.analog = new LoggerAnalogInstrumentService(_transport, _loggerInstrumentDescriptor == undefined ? undefined : _loggerInstrumentDescriptor.analog);
+        this.analog = new LoggerAnalogInstrumentService(_transport, _loggerInstrumentDescriptor == undefined ? undefined : _loggerInstrumentDescriptor.analog
+            || _loggerInstrumentDescriptor.daq);
         this.digital = new LoggerDigitalInstrumentService(_transport, _loggerInstrumentDescriptor == undefined ? undefined : _loggerInstrumentDescriptor.digital);
     }
 }
