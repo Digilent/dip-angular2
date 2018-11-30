@@ -291,10 +291,14 @@ export class DeviceService {
     calibrationStart(instruments?: CalibrationInstruments): Observable<any> {
         let command = {
             "device": [{
-                command: "calibrationStart",
-                ...instruments
+                command: "calibrationStart"
             }]
         }
+
+        if (instruments.daq) command.device[0]["daq"] = instruments.daq;
+        if (instruments.dc) command.device[0]["dc"] = instruments.dc;
+        if (instruments.awg) command.device[0]["awg"] = instruments.awg;
+
         return this._genericResponseHandler(command);
     }
 
@@ -468,7 +472,7 @@ export class DeviceService {
 
 }
 
-interface CalibrationInstruments {
+export interface CalibrationInstruments {
     dc?: number[]
     awg?: number
     daq?: number[]
