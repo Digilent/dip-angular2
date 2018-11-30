@@ -92,7 +92,7 @@ export class SimulatedDeviceService {
                         }
                     }
 
-                    return; // skip doing loop2 because it doesn't pertain to the logger 
+                    continue; // skip doing loop2 because it doesn't pertain to the logger 
                 }
             }
 
