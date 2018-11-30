@@ -166,7 +166,7 @@ export class OscInstrumentService extends GenericInstrumentService {
                             observer.complete();
                         },
                         (err) => {
-                            observer.error(data);
+                            (err === 'corrupt transfer') ? observer.error(err) : observer.error(data);
                         },
                         () => { }
                     );
