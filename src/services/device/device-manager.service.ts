@@ -153,7 +153,7 @@ export class DeviceManagerService {
             });
 
             // We set up our request
-            XHR.open("GET", 'assets/devices/openscope-mz/descriptor.json');
+            XHR.open("GET", `assets/devices/${deviceName}/descriptor.json`);
 
             XHR.send();
         });
