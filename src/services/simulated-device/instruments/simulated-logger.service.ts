@@ -116,7 +116,7 @@ export class SimulatedLoggerService {
         
         let y = [];
         for (let i = 0; i < numSamples; i++) {
-            y[i] = (vpp / 2) * Math.sin((2 * Math.PI * (sigFreq / 1000)) * dt * i + t0 + phase) + vOffset;
+            y[i] = (vpp / 2) * Math.sin((2 * Math.PI * (sigFreq / 1000)) * dt * (i + t0) + phase) + vOffset;
         }
     
         let typedArray = new Int16Array(y);
