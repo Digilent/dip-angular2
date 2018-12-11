@@ -171,15 +171,23 @@ export class LoggerCommandService {
         let command = {
             "log": {}
         }
-        command.log[instrument] = {};
-        chans.forEach((element, index, array) => {
-            command.log[instrument][chans[index]] =
-                [
-                    {
-                        command: "getCurrentState"
-                    }
-                ]
-        });
+
+        if (instrument === 'daq') {
+            command.log[instrument] = { command: 'getCurrentState' };
+        }
+        else {
+            command.log[instrument] = {};
+
+            chans.forEach((element, index, array) => {
+                command.log[instrument][chans[index]] =
+                    [
+                        {
+                            command: "getCurrentState"
+                        }
+                    ]
+            });
+        }
+
         return command;
     }
 

@@ -39,8 +39,15 @@ export abstract class GenericInstrumentService {
                     for (let instrument in data) {
                         if (instrument === 'log') {
                             for (let chanType in data[instrument]) {
-                                for (let channel in data[instrument][chanType]) {
-                                    if (data[instrument][chanType][channel][0].statusCode > 0) {
+                                if (chanType !== 'daq') {
+                                    for (let channel in data[instrument][chanType]) {
+                                        if (data[instrument][chanType][channel][0].statusCode > 0) {
+                                            observer.error(data);
+                                            return;
+                                        }
+                                    }
+                                } else {
+                                    if (data[instrument].statusCode > 0) {
                                         observer.error(data);
                                         return;
                                     }
