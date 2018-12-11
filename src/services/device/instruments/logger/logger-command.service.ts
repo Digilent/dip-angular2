@@ -45,6 +45,36 @@ export class LoggerCommandService {
         return command;
     }
 
+    daqSetParametersJson(chans: number[], maxSampleCount: number, sampleFreq: number, startDelay: number,
+                                average: number, storageLocations: string[], uris: string[]): string {
+
+        let command: any = {
+            "log": {
+                "daq": {
+                    "command":"setParameters",
+                    "maxSampleCount": maxSampleCount,
+                    "startDelay": startDelay,
+                    "sampleFreq":sampleFreq,
+                    "channels" : []
+                }
+            }
+        }
+
+        chans.forEach((element, index, array) => {
+            let channelSettings: any = {};
+            
+            channelSettings[chans[index]] = {
+                average,
+                storageLocation: storageLocations[index],
+                uri: uris[index]
+            };
+
+            command.log.daq.channels.push(channelSettings);
+        });
+
+        return command;
+    }
+
     analogSetParametersParse(chan, responseObject) {
         return 'Channel ' + chan + ' ' + responseObject.command + ' successful';
     }
@@ -158,6 +188,15 @@ export class LoggerCommandService {
         return this.instrumentRef._genericResponseHandler(command);
     }
 
+    daqSetParameters(chans: number[], maxSampleCount: number, sampleFreq: number, startDelay: number,
+        average: number, storageLocations: string[], uris: string[]): Observable<any> {
+
+        let command = this.daqSetParametersJson(chans, maxSampleCount, sampleFreq, startDelay, average,
+            storageLocations, uris);
+
+        return this.instrumentRef._genericResponseHandler(command);
+    }
+
     digitalSetParameters(chans: number[], maxSampleCounts: number[], sampleFreqs: number[], startDelays: number[], overflows: Array<'stop' | 'circular'>, storageLocations: string[], uris: string[], bitMasks: number[]): Observable<any> {
         let command = this.digitalSetParametersJson(chans, maxSampleCounts, sampleFreqs, startDelays, overflows, storageLocations, uris, bitMasks);
         return this.instrumentRef._genericResponseHandler(command);
@@ -231,4 +270,4 @@ export class LoggerCommandService {
 
 }
 
-export type LoggerInstruments = 'analog' | 'digital';
+export type LoggerInstruments = 'analog' | 'digital' | 'daq';
