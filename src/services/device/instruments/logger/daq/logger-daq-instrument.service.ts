@@ -6,7 +6,7 @@ import 'rxjs/Rx';
 import { GenericInstrumentService } from '../../generic-instrument.service';
 import { TransportContainerService } from '../../../../transport/transport-container.service';
 import { LoggerDaqChannelService } from './logger-daq-channel.service';
-import { LoggerCommandService } from '../logger-command.service';
+import { LoggerCommandService } from './logger-command.service';
 
 //Interfaces
 import { LoggerInstruments } from '../logger-command.service';
