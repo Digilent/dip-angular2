@@ -42,12 +42,12 @@ export class LoggerDaqInstrumentService extends GenericInstrumentService {
     }
 
     setParameters(chans: number[], maxSampleCount: number, sampleFreq: number, startDelay: number, average: number, overflows: Array<'stop' | 'circular'>, storageLocations: string[], uris: string[]) {
-        return this.loggerCommandService.daqSetParameters(chans, maxSampleCount, sampleFreq, startDelay,
+        return this.loggerCommandService.setParameters(chans, maxSampleCount, sampleFreq, startDelay,
             average, storageLocations, uris);
     }
 
     run(instrument: LoggerInstruments, chans: number[]) {
-        return this.loggerCommandService.run('daq', chans);
+        return this.loggerCommandService.run();
     }
 
     stop(instrument: LoggerInstruments, chans: number[]): Observable<any> {
@@ -55,10 +55,10 @@ export class LoggerDaqInstrumentService extends GenericInstrumentService {
     }
 
     read(instrument: LoggerInstruments, chans: number[], startIndices: number[], counts: number[]): Observable<any> {
-        return this.loggerCommandService.read('daq', chans, startIndices, counts);
+        return this.loggerCommandService.read(chans, startIndices, counts);
     }
 
     getCurrentState(instrument: LoggerInstruments, chans: number[]) {
-        return this.loggerCommandService.getCurrentState('daq', chans);
+        return this.loggerCommandService.getCurrentState();
     }
 }
