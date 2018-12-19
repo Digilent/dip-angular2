@@ -233,31 +233,41 @@ export class LoggerCommandService {
                             cmdRespObj: data.json,
                             instruments: {}
                         };
+
                         let command = data.json;
+
                         console.log(command);
+
                         for (let instrument in command.log) {
                             returnObject.instruments[instrument] = {};
+
                             for (let channel in command.log[instrument]) {
                                 returnObject.instruments[instrument][channel] = {};
+
                                 if (command.log[instrument][channel][0].statusCode > 0) {
                                     observer.error('StatusCode error: ' + instrument + ' Ch ' + channel);
                                     return;
                                 }
+
                                 if (command.log[instrument][channel][0].binaryLength === 0) {
                                     observer.error('No data received on ' + instrument + ' Ch ' + channel);
                                     return;
                                 }
+
                                 let binaryOffset = command.log[instrument][channel][0].binaryOffset / 2;
                                 let binaryData = data.typedArray.slice(binaryOffset, binaryOffset + command.log[instrument][channel][0].binaryLength / 2);
                                 let untypedArray = Array.prototype.slice.call(binaryData);
                                 let scaledArray = untypedArray.map((voltage) => {
                                     return voltage / 1000;
                                 });
+
                                 Object.assign(returnObject.instruments[instrument][channel], command.log[instrument][channel][0]);
+
                                 returnObject.instruments[instrument][channel]['data'] = scaledArray;
                             }
                         }
                         observer.next(returnObject);
+                        
                         observer.complete();
                     },
                     (err) => {
