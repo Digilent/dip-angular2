@@ -10,6 +10,7 @@ export class CommandUtilityService {
     parseChunkedTransfer(data): Promise<any> {
         return new Promise((resolve, reject) => {
             let firstChar = String.fromCharCode.apply(null, new Uint8Array(data.slice(0, 1)));
+
             if (isNaN(parseInt(firstChar, 16))) {
                 reject({
                     message: 'json or bad packet',
@@ -17,12 +18,15 @@ export class CommandUtilityService {
                 });
                 return;
             }
+
             let chunkGuardLength = 100;
             let currentReadIndex: number = 0;
             let chunkLength: number;
             let chunkInfo = this._findNewLineChar(chunkGuardLength, data, currentReadIndex);
+
             chunkLength = this._getChunkLength(chunkInfo.stringBuffer);
             currentReadIndex = chunkInfo.endingIndex;
+
             let jsonPortion;
             try {
                 jsonPortion = JSON.parse(String.fromCharCode.apply(null, new Uint8Array(data.slice(currentReadIndex, currentReadIndex + chunkLength + 2))));
@@ -31,16 +35,19 @@ export class CommandUtilityService {
                 reject(e);
                 return;
             }
+
             currentReadIndex = currentReadIndex + chunkLength + 2;
             chunkInfo = this._findNewLineChar(chunkGuardLength, data, currentReadIndex);
             chunkLength = this._getChunkLength(chunkInfo.stringBuffer);
             currentReadIndex = chunkInfo.endingIndex;
+
             let binaryDataSlice = data.slice(currentReadIndex, currentReadIndex + chunkLength);
             if (binaryDataSlice.byteLength !== chunkLength) {
                 console.warn(new Uint8Array(data));
                 reject('corrupt transfer');
                 return;
             }
+
             let typedArray;
             try {
                 typedArray = new Int16Array(binaryDataSlice);
@@ -49,6 +56,7 @@ export class CommandUtilityService {
                 reject(e);
                 return;
             }
+
             resolve({
                 json: jsonPortion,
                 typedArray: typedArray
@@ -60,6 +68,7 @@ export class CommandUtilityService {
         typedArrayFormat = typedArrayFormat == undefined ? 'i16' : typedArrayFormat;
         return Observable.create((observer) => {
             let firstChar = String.fromCharCode.apply(null, new Uint8Array(data.slice(0, 1)));
+
             if (isNaN(parseInt(firstChar, 16))) {
                 observer.error({
                     message: 'json or bad packet',
@@ -67,12 +76,15 @@ export class CommandUtilityService {
                 });
                 return;
             }
+
             let chunkGuardLength = 100;
             let currentReadIndex: number = 0;
             let chunkLength: number;
             let chunkInfo = this._findNewLineChar(chunkGuardLength, data, currentReadIndex);
+
             chunkLength = this._getChunkLength(chunkInfo.stringBuffer);
             currentReadIndex = chunkInfo.endingIndex;
+
             let jsonPortion;
             try {
                 jsonPortion = JSON.parse(String.fromCharCode.apply(null, new Uint8Array(data.slice(currentReadIndex, currentReadIndex + chunkLength + 2))));
@@ -85,7 +97,9 @@ export class CommandUtilityService {
             chunkInfo = this._findNewLineChar(chunkGuardLength, data, currentReadIndex);
             chunkLength = this._getChunkLength(chunkInfo.stringBuffer);
             currentReadIndex = chunkInfo.endingIndex;
+
             let binaryDataSlice = data.slice(currentReadIndex, currentReadIndex + chunkLength);
+
             if (binaryDataSlice.byteLength !== chunkLength) {
                 console.warn(new Uint8Array(data));
                 observer.error('corrupt transfer');
@@ -123,17 +137,23 @@ export class CommandUtilityService {
     private _findNewLineChar(maxLength: number, data: ArrayBuffer, startIndex: number) {
         let char = '';
         let i = startIndex;
+
         maxLength = maxLength + i;
+
         let stringBuffer = '';
         while (i < maxLength && char !== '\n') {
             char = String.fromCharCode.apply(null, new Int8Array(data.slice(i, i + 1)));
+
             stringBuffer += char;
+
             i++;
         }
+
         let returnInfo = {
             stringBuffer: stringBuffer,
             endingIndex: i
         };
+
         return returnInfo;
     }
 
@@ -141,16 +161,20 @@ export class CommandUtilityService {
         if (array.length % 2 !== 0) {
             throw new Error('Array length must be multiple of two!');
         }
+
         let arrayBufferView = new Int16Array(array);
+
         return arrayBufferView.buffer;
     }
 
     createArrayBufferFromString(source: string): ArrayBuffer {
         let arrayBuffer = new ArrayBuffer(source.length);
         let bufView = new Uint8Array(arrayBuffer);
+
         for (var i = 0; i < source.length; i < i++) {
             bufView[i] = source.charCodeAt(i);
         }
+
         return arrayBuffer;
     }
 
