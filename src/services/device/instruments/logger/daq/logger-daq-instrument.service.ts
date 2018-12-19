@@ -50,8 +50,8 @@ export class LoggerDaqInstrumentService extends GenericInstrumentService {
         return this.loggerCommandService.run();
     }
 
-    stop(instrument: LoggerInstruments, chans: number[]): Observable<any> {
-        return this.loggerCommandService.stop('daq', chans);
+    stop(): Observable<any> {
+        return this.loggerCommandService.stop();
     }
 
     read(instrument: LoggerInstruments, chans: number[], startIndex: number, count: number): Observable<any> {

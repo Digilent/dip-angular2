@@ -68,7 +68,7 @@ export class LoggerCommandService {
         return command;
     }
 
-    stopJson(instrument: LoggerInstruments, chans: number[]) {
+    stopJson() {
         let command = {
             "log": {
                 "daq": {
@@ -122,8 +122,9 @@ export class LoggerCommandService {
         return this.instrumentRef._genericResponseHandler(command);
     }
 
-    stop(instrument: LoggerInstruments, chans: number[]): Observable<any> {
-        let command = this.stopJson(instrument, chans);
+    stop(): Observable<any> {
+        let command = this.stopJson();
+
         return this.instrumentRef._genericResponseHandler(command);
     }
 
