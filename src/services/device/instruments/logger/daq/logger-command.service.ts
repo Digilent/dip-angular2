@@ -127,8 +127,8 @@ export class LoggerCommandService {
         return this.instrumentRef._genericResponseHandler(command);
     }
 
-    read(chans: number[], startIndices: number[], counts: number[]): Observable<any> {
-        let command = this.readJson(chans, startIndices[0], counts[0]); // TODO: change X[0] -> just X
+    read(chans: number[], startIndex: number, count: number): Observable<any> {
+        let command = this.readJson(chans, startIndex, count);
 
         return Observable.create((observer) => {
             this.instrumentRef.transport.writeRead('/', JSON.stringify(command), 'binary')
