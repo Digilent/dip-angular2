@@ -144,44 +144,30 @@ export class LoggerCommandService {
                         };
 
                         let command = data.json;
+                        let typedArray = data.typedArray;
 
                         console.log(command);
 
                         for (let instrument in command.log) {
                             returnObject.instruments[instrument] = {};
 
-
-                            // NO CHANNELS IN THE RESPONSE...
-                            for (let channel of command.log[instrument].channels) {
+                            for (let channel of command.log.daq.channels) {
                                 returnObject.instruments[instrument][channel] = {};
-
-                                if (command.log[instrument].statusCode > 0) {
-                                    observer.error('StatusCode error: ' + instrument + ' Ch ' + channel);
-                                    return;
-                                }
-
-                                if (command.log[instrument].binaryLength === 0) {
-                                    observer.error('No data received on ' + instrument + ' Ch ' + channel);
-                                    return;
-                                }
-
-                                let binaryOffset = command.log[instrument].binaryOffset / 2; // I am pretty sure that we divide by 2 since we get i16 as the sampleDataType
-                                let binaryData = data.typedArray.slice(binaryOffset, binaryOffset + command.log[instrument].binaryLength / 2); // this is what needs to be de-interlaced
-                                let untypedArray = Array.prototype.slice.call(binaryData);
-
-                                /*
-                                    I need to iterate over the binary data by number of channels to be read & the channels themselves.
-                                */
-
-                                console.log('BINARY:', binaryData, untypedArray);
-
-                                let scaledArray = untypedArray.map((voltage) => {
-                                    return voltage / 1000;
-                                });
 
                                 Object.assign(returnObject.instruments[instrument][channel], command.log[instrument]);
 
-                                returnObject.instruments[instrument][channel]['data'] = scaledArray;
+                                returnObject.instruments[instrument][channel]['data'] = [];
+                            }
+                            
+                            // iterate over the data in the typed array, and pack each index into the respective channel buffer
+                            for (let dataIndex = 0; dataIndex < typedArray.length; dataIndex += command.log.daq.channels.length) {
+                                for (let chanIndex = 0; chanIndex < command.log.daq.channels.length; chanIndex++) {
+                                    let channel = command.log.daq.channels[chanIndex];
+
+                                    let scaledValue = typedArray[dataIndex + chanIndex] / 1000;
+
+                                    returnObject.instruments[instrument][channel]['data'].push(scaledValue);
+                                }
                             }
                         }
 
@@ -191,7 +177,7 @@ export class LoggerCommandService {
                     },
                     (err) => {
                         console.log(err);
-                        
+
                         observer.error(err);
                     },
                     () => { } 
