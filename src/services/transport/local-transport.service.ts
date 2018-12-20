@@ -4,7 +4,8 @@ import 'rxjs/Rx';
 
 //Services
 import { GenericTransportService } from './generic-transport.service';
-import { SimulatedDeviceService } from '../simulated-device/simulated-device.service';
+import { SimulatedOpenScopeService } from '../simulated-device/simulated-openscope.service';
+import { SimulatedOpenLoggerService } from '../simulated-device/simulated-openlogger.service';
 
 @Injectable()
 export class LocalTransportService extends GenericTransportService {
@@ -13,15 +14,15 @@ export class LocalTransportService extends GenericTransportService {
         mode: string,
         remainingSamples: number
     };
-    public simulatedDevice: SimulatedDeviceService;
+    public simulatedDevice: SimulatedOpenScopeService | SimulatedOpenLoggerService;
 
-    constructor(deviceEnumeration: string) {
+    constructor(deviceEnumeration: any) {
         super();
         this.streamState = {
             mode: 'off',
             remainingSamples: 0
-        }
-        this.simulatedDevice = new SimulatedDeviceService(deviceEnumeration);
+        };
+        this.simulatedDevice = deviceEnumeration.log != undefined && deviceEnumeration.log.daq != undefined ? new SimulatedOpenLoggerService(deviceEnumeration) : new SimulatedOpenScopeService(deviceEnumeration);
     }
 
     getUri() {

@@ -9,14 +9,14 @@ import { SimulatedOscService } from './instruments/simulated-osc.service';
 import { SimulatedTriggerService } from './instruments/simulated-trigger.service';
 import { SimulatedLaService } from './instruments/simulated-la.service';
 import { SimulatedGpioService } from './instruments/simulated-gpio.service';
-import { SimulatedLoggerService } from './instruments/simulated-logger.service';
+import { SimulatedDaqLoggerService } from './instruments/simulated-daq-logger.service';
 
 //Services
 import { SimulatedDeviceHelperService } from './simulated-device-helper.service';
 import { CommandUtilityService } from '../utilities/command-utility.service';
 
 @Injectable()
-export class SimulatedDeviceService {
+export class SimulatedOpenLoggerService {
 
     public streamState: {
         mode: string,
@@ -31,7 +31,7 @@ export class SimulatedDeviceService {
     public gpio: SimulatedGpioService;
     public simDevService: SimulatedDeviceHelperService;
     public commandUtilityService: CommandUtilityService;
-    public logger: SimulatedLoggerService;
+    public logger: SimulatedDaqLoggerService;
 
     constructor(enumeration) {
         this.descriptor = enumeration;
@@ -44,7 +44,7 @@ export class SimulatedDeviceService {
         this.trigger = new SimulatedTriggerService(this.simDevService);
         this.la = new SimulatedLaService(this.simDevService);
         this.gpio = new SimulatedGpioService(this.simDevService);
-        this.logger = new SimulatedLoggerService(this.simDevService);
+        this.logger = new SimulatedDaqLoggerService(this.simDevService);
     }
 
     send(command: any): Observable<any> {
@@ -74,25 +74,16 @@ export class SimulatedDeviceService {
 
             } else if (typeof event[instrument] === 'object') {
                 if (instrument === 'log') {
-                    // each channel in the digital/analog object has a command to process
-                    let analogObj = event[instrument].analog; // logger has analog/digital channel types
-                    responseObject[instrument]['analog'] = {};
+                    let daqObj = event[instrument].daq;
+                    responseObject[instrument]['daq'] = this.processCommands(instrument, daqObj, []);
 
-                    for (let channel in analogObj) {
-                        let commandArray = analogObj[channel];
-                        responseObject[instrument].analog[channel] = [];
+                    sumStatusCode += responseObject[instrument].daq.statusCode;
 
-                        for (let commandObj of commandArray) {
-                            let activeIndex = responseObject[instrument].analog[channel].push(this.processCommands(instrument, commandObj, [channel])) - 1;
-                            sumStatusCode += responseObject[instrument].analog[channel][activeIndex].statusCode;
-
-                            if (commandObj.command === "read") {
-                                binaryDataFlag = 1;
-                            }
-                        }
+                    if (daqObj.command === "read") {
+                        binaryDataFlag = 1;
                     }
 
-                    continue; // skip doing loop2 because it doesn't pertain to the logger 
+                    continue;  // skip doing loop2 because it doesn't pertain to the logger 
                 }
             }
 
@@ -170,7 +161,7 @@ export class SimulatedDeviceService {
                 return this.trigger.single();
             case 'triggerforceTrigger':
                 return this.trigger.forceTrigger();
-            case 'triggerstop': 
+            case 'triggerstop':
                 return this.trigger.stop();
 
             //---------- OSC ----------            
@@ -187,15 +178,15 @@ export class SimulatedDeviceService {
 
             //---------- LOGGER ----------  
             case 'loggetCurrentState':
-                return this.logger.getCurrentState(params[0]);
+                return this.logger.getCurrentState();
             case 'logstop':
-                return this.logger.stop(params[0]);
+                return this.logger.stop();
             case 'logsetParameters':
-                return this.logger.setParameters(params[0], commandObject);
+                return this.logger.setParameters(commandObject);
             case 'logrun':
-                return this.logger.run(params[0]);
+                return this.logger.run();
             case 'logread':
-                return this.logger.read(params[0]);
+                return this.logger.read(commandObject);
 
             default:
                 return {
@@ -232,22 +223,20 @@ export class SimulatedDeviceService {
                 }
             }
         }
-        
+
         // note(andrew): if the container is empty then that means the commandObject instrument
         // is the logger, because the trigger doesn't get set when logging, and doesn't
         // ever get 'log' as a target
-        if(Object.keys(binaryDataContainer).length === 0 && commandObject["log"] !== undefined) {
+        if (Object.keys(binaryDataContainer).length === 0 && commandObject["log"] !== undefined) {
             binaryDataContainer["log"] = {};
 
             for (let channelType in commandObject["log"]) {
-                binaryDataContainer.log[channelType] = {};
+                binaryDataContainer.log[channelType] = commandObject.log[channelType].y;
 
-                for (let channel in commandObject["log"][channelType]) {
-                    binaryDataContainer.log[channelType][channel] = commandObject.log[channelType][channel][0].y;
-                    commandObject.log[channelType][channel][0].binaryOffset = binaryOffset;
-                    binaryOffset += commandObject.log[channelType][channel][0].binaryLength;
-                    delete commandObject.log[channelType][channel][0].y;
-                }
+                commandObject.log[channelType].binaryOffset = binaryOffset;
+                binaryOffset += commandObject.log[channelType].binaryLength;
+
+                delete commandObject.log[channelType].y;
             }
         }
 
@@ -258,17 +247,15 @@ export class SimulatedDeviceService {
         for (let instrument in binaryDataContainer) {
             if (instrument === "log") { // handle logger instrument differently
                 for (let channelType in binaryDataContainer.log) {
-                    for (let channel in binaryDataContainer.log[channelType]) {
-                        let unsignedConversion = new Uint8Array(binaryDataContainer.log[channelType][channel].buffer);
-                        binaryInjectorIndex += prevLength + unsignedConversion.length;
-                        
-                        for (let i = prevLength, j = 0; i < binaryInjectorIndex; i = i + 2, j = j + 2) {
-                            bufView[i] = unsignedConversion[j];
-                            bufView[i + 1] = unsignedConversion[j + 1];
-                        }
+                    let unsignedConversion = new Uint8Array(binaryDataContainer.log[channelType].buffer);
+                    binaryInjectorIndex += prevLength + unsignedConversion.length;
 
-                        prevLength = unsignedConversion.length;
+                    for (let i = prevLength, j = 0; i < binaryInjectorIndex; i = i + 2, j = j + 2) {
+                        bufView[i] = unsignedConversion[j];
+                        bufView[i + 1] = unsignedConversion[j + 1];
                     }
+
+                    prevLength = unsignedConversion.length;
                 }
             } else {
                 for (let channel in binaryDataContainer[instrument]) {
@@ -283,7 +270,7 @@ export class SimulatedDeviceService {
                 }
             }
         }
-        
+
         return this.commandUtilityService.createChunkedArrayBuffer(commandObject, bufView.buffer).buffer;
     }
 }

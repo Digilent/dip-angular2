@@ -26,7 +26,8 @@ export * from './dist/device/instruments/logger/digital/logger-digital-channel.s
 export * from './dist/device/instruments/logger/digital/logger-digital-instrument.service';
 
 //Simulated device
-export * from './dist/simulated-device/simulated-device.service';
+export * from './dist/simulated-device/simulated-openscope.service';
+export * from './dist/simulated-device/simulated-openlogger.service';
 export * from './dist/simulated-device/simulated-device-helper.service';
 export * from './dist/simulated-device/instruments/simulated-awg.service';
 export * from './dist/simulated-device/instruments/simulated-dc.service';

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { SimulatedDeviceHelperService } from '../simulated-device-helper.service';
 
 @Injectable()
-export class SimulatedLoggerService {
+export class SimulatedAnalogLoggerService {
     private simulatedDeviceService: SimulatedDeviceHelperService;
 
     // simulated MZ Scope has X channels while an MZ Logger has 8 channels
@@ -118,6 +118,8 @@ export class SimulatedLoggerService {
         for (let i = 0; i < numSamples; i++) {
             y[i] = (vpp / 2) * Math.sin((2 * Math.PI * (sigFreq / 1000)) * dt * (i + t0) + phase) + vOffset;
         }
+
+        console.log("Y:", y);
     
         let typedArray = new Int16Array(y);
 
@@ -168,6 +170,8 @@ export class SimulatedLoggerService {
             }
         }
 
+        console.log("Y:", y);
+
         let typedArray = new Int16Array(y);
 
         //length is 2x the array length because 2 bytes per entry
@@ -210,6 +214,8 @@ export class SimulatedLoggerService {
         for (let i = 0; i < numSamples; i++) {
             y[i] = ((4 * (vpp / 2)) / period) * (Math.abs(((dt * (i + t0) + phase + 3 * period / 4) % period) - period / 2) - period / 4) + vOffset;
         }
+
+        console.log("Y:", y);
 
         let typedArray = new Int16Array(y);
 
@@ -255,6 +261,8 @@ export class SimulatedLoggerService {
             y[i] = (vpp / period) * ((dt * (i + t0) + phase) % period) + vOffset;
         }
 
+        console.log("Y:", y);
+
         let typedArray = new Int16Array(y);
 
         return {
@@ -293,6 +301,8 @@ export class SimulatedLoggerService {
             y[i] = vOffset;
         }
 
+        console.log("Y:", y);
+
         let typedArray = new Int16Array(y);
 
         return {
@@ -329,6 +339,8 @@ export class SimulatedLoggerService {
         for (let j = 0; j < numSamples; j++) {
             y[j] = 0;
         }
+
+        console.log("Y:", y);
 
         let typedArray = new Int16Array(y);
 
