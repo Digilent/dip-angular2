@@ -246,26 +246,31 @@ export class SimulatedDaqLoggerService {
 
         let typedArray;
 
-        switch (awgSettings.signalType) {
-            case 'sine':
-                typedArray = this.drawSine(awgSettings, channels, numSamples, dt);
-                break;
-            case 'triangle':
-                typedArray = this.drawTriangle(awgSettings, channels, numSamples, dt);
-                break;
-            case 'sawtooth':
-                typedArray = this.drawSawtooth(awgSettings, channels, numSamples, dt);
-                break;
-            case 'square':
-                typedArray = this.drawSquare(awgSettings, channels, numSamples, dt);
-                break;
-            case 'dc':
-                typedArray = this.drawDc(awgSettings.vOffset, channels, numSamples);
-                break;
-            default:
-                typedArray = this.drawDefault(channels, numSamples);
-                responseObj.actualVOffset = 0;
-                break;
+        if (!this.simulatedDeviceService.getTriggerArmed()) {
+            typedArray = this.drawDefault(channels, numSamples);
+            responseObj.actualVOffset = 0;
+        } else {
+            switch (awgSettings.signalType) {
+                case 'sine':
+                    typedArray = this.drawSine(awgSettings, channels, numSamples, dt);
+                    break;
+                case 'triangle':
+                    typedArray = this.drawTriangle(awgSettings, channels, numSamples, dt);
+                    break;
+                case 'sawtooth':
+                    typedArray = this.drawSawtooth(awgSettings, channels, numSamples, dt);
+                    break;
+                case 'square':
+                    typedArray = this.drawSquare(awgSettings, channels, numSamples, dt);
+                    break;
+                case 'dc':
+                    typedArray = this.drawDc(awgSettings.vOffset, channels, numSamples);
+                    break;
+                default:
+                    typedArray = this.drawDefault(channels, numSamples);
+                    responseObj.actualVOffset = 0;
+                    break;
+            }
         }
 
         responseObj.binaryLength = 2 * typedArray.length;
