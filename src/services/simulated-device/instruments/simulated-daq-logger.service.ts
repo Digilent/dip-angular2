@@ -222,7 +222,7 @@ export class SimulatedDaqLoggerService {
         var T = now - this.timeOfLastRead;
 
         let sampleRate = this.sampleFreq || 6.25e9;
-        let numSamples = Math.floor((sampleRate / 1e6) * (T / 1000));
+        let numSamples = Math.round((sampleRate / 1e6) * (T / 1000));
         if (numSamples > 0) {
             this.timeOfLastRead = now;
         }
