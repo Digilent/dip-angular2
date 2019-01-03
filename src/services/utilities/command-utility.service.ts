@@ -2,12 +2,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
 
+declare var TextDecoder: any; // allow us to transpile, despite TextDecoder not being a part of this TypeScript spec
+
 @Injectable()
 export class CommandUtilityService {
 
     constructor() { }
 
-    parseChunkedTransfer(data): Promise<any> {
+    parseChunkedTransfer(data: ArrayBuffer): Promise<any> {
         return new Promise((resolve, reject) => {
             let firstChar = String.fromCharCode.apply(null, new Uint8Array(data.slice(0, 1)));
 
@@ -64,12 +66,14 @@ export class CommandUtilityService {
         });
     }
 
-    observableParseChunkedTransfer(data, typedArrayFormat?: 'i16' | 'u8'): Observable<any> {
+    observableParseChunkedTransfer(data: ArrayBuffer, typedArrayFormat?: 'i16' | 'u8'): Observable<any> {
         typedArrayFormat = typedArrayFormat == undefined ? 'i16' : typedArrayFormat;
         return Observable.create((observer) => {
             let firstChar = String.fromCharCode.apply(null, new Uint8Array(data.slice(0, 1)));
 
             if (isNaN(parseInt(firstChar, 16))) {
+                let str = new TextDecoder('utf-8').decode(new Uint8Array(data.slice(0)));
+                
                 observer.error({
                     message: 'json or bad packet',
                     payload: data
@@ -93,6 +97,7 @@ export class CommandUtilityService {
                 observer.error(e);
                 return;
             }
+            
             currentReadIndex = currentReadIndex + chunkLength + 2;
             chunkInfo = this._findNewLineChar(chunkGuardLength, data, currentReadIndex);
             chunkLength = this._getChunkLength(chunkInfo.stringBuffer);
@@ -105,7 +110,8 @@ export class CommandUtilityService {
                 observer.error('corrupt transfer');
                 return;
             }
-            let typedArray;
+
+            let typedArray: Int16Array | Uint8Array;
             try {
                 switch (typedArrayFormat) {
                     case 'i16':
@@ -122,6 +128,7 @@ export class CommandUtilityService {
                 observer.error(e);
                 return;
             }
+            
             observer.next({
                 json: jsonPortion,
                 typedArray: typedArray
