@@ -18,10 +18,12 @@ export class LocalTransportService extends GenericTransportService {
 
     constructor(deviceEnumeration: any) {
         super();
+
         this.streamState = {
             mode: 'off',
             remainingSamples: 0
         };
+        
         this.simulatedDevice = deviceEnumeration.log != undefined && deviceEnumeration.log.daq != undefined ? new SimulatedOpenLoggerService(deviceEnumeration) : new SimulatedOpenScopeService(deviceEnumeration);
     }
 
