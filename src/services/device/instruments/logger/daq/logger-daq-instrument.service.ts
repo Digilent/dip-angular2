@@ -18,6 +18,7 @@ export class LoggerDaqInstrumentService extends GenericInstrumentService {
     readonly numChans: number = 0;
     readonly fileFormat: number = -1;
     readonly fileRevision: number = -1;
+    readonly targets: any = {};
     private loggerCommandService: LoggerCommandService = new LoggerCommandService(this);
 
     constructor(_transport: TransportContainerService, _loggerInstrumentDescriptor: any) {
@@ -29,6 +30,7 @@ export class LoggerDaqInstrumentService extends GenericInstrumentService {
 
         this.fileFormat = _loggerInstrumentDescriptor.fileFormat;
         this.fileRevision = _loggerInstrumentDescriptor.fileRevision;
+        this.targets = _loggerInstrumentDescriptor.targets[0];
 
         //Populate logger supply parameters
         this.numChans = _loggerInstrumentDescriptor.numChans;
