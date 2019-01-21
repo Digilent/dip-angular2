@@ -18,8 +18,7 @@ export class LoggerCommandService {
         this.commandUtilityService = new CommandUtilityService();
     }
 
-    setParametersJson(chans: number[], maxSampleCount: number, sampleFreq: number, startDelay: number,
-                                average: number, storageLocations: string[], uris: string[]): string {
+    setParametersJson(chans: number[], maxSampleCount: number, sampleFreq: number, startDelay: number, storageLocation: string, uri: string, average: number): string {
 
         let command: any = {
             "log": {
@@ -28,6 +27,8 @@ export class LoggerCommandService {
                     "maxSampleCount": maxSampleCount,
                     "startDelay": Math.round(startDelay * Math.pow(10, 12)),
                     "sampleFreq": Math.round(sampleFreq * 1000000),
+                    "storageLocation": storageLocation,
+                    "uri": uri,
                     "channels" : []
                 }
             }
@@ -37,9 +38,7 @@ export class LoggerCommandService {
             let channelSettings: any = {};
             
             channelSettings[chans[index]] = {
-                average,
-                storageLocation: storageLocations[index],
-                uri: uris[index]
+                average
             };
 
             command.log.daq.channels.push(channelSettings);
@@ -107,11 +106,9 @@ export class LoggerCommandService {
         return command;
     }
 
-    setParameters(chans: number[], maxSampleCount: number, sampleFreq: number, startDelay: number,
-        average: number, storageLocations: string[], uris: string[]): Observable<any> {
+    setParameters(chans: number[], maxSampleCount: number, sampleFreq: number, startDelay: number, storageLocation: string, uri: string, average: number): Observable<any> {
 
-        let command = this.setParametersJson(chans, maxSampleCount, sampleFreq, startDelay, average,
-            storageLocations, uris);
+        let command = this.setParametersJson(chans, maxSampleCount, sampleFreq, startDelay, storageLocation, uri, average);
 
         return this.instrumentRef._genericResponseHandler(command);
     }
