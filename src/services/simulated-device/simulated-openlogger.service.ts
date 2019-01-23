@@ -188,6 +188,16 @@ export class SimulatedOpenLoggerService {
             case 'logread':
                 return this.logger.read(commandObject);
 
+            case 'filelistdir': 
+                return [{
+                        command: 'listdir',
+                        files: [],
+                        path: '/',
+                        statusCode: 0,
+                        type: 'flash',
+                        wait: 0
+                    }];
+
             default:
                 return {
                     statusCode: 1,
