@@ -54,6 +54,7 @@ export class SimulatedAwgService {
 
     run(chan) {
         this.simulatedDeviceService.setTriggerArmed(true);
+        this.state = 'running';
         return {
             "command": "run",
             "statusCode": 0,
@@ -63,6 +64,7 @@ export class SimulatedAwgService {
 
     stop(chan) {
         this.simulatedDeviceService.setTriggerArmed(false);
+        this.state = 'stopped';
         return {
             "command": "stop",
             "statusCode": 0,
