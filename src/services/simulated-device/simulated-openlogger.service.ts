@@ -40,10 +40,6 @@ export class SimulatedOpenLoggerService {
         this.simDevService.setEnumeration(this.descriptor);
         this.awg = new SimulatedAwgService(this.simDevService);
         this.dc = new SimulatedDcService(this.simDevService);
-        this.osc = new SimulatedOscService(this.simDevService);
-        this.trigger = new SimulatedTriggerService(this.simDevService);
-        this.la = new SimulatedLaService(this.simDevService);
-        this.gpio = new SimulatedGpioService(this.simDevService);
         this.logger = new SimulatedDaqLoggerService(this.simDevService);
     }
 
