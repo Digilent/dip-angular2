@@ -135,6 +135,8 @@ export class SimulatedOpenLoggerService {
                 return this.awg.setArbitraryWaveform(params[0]);
             case 'awgsetRegularWaveform':
                 return this.awg.setRegularWaveform(params[0], commandObject);
+            case 'awggetCurrentState':
+                return this.awg.getCurrentState(params[0]);
             case 'awgrun':
                 return this.awg.run(params[0]);
             case 'awgstop':
