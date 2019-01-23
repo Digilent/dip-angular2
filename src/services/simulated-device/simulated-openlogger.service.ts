@@ -199,30 +199,6 @@ export class SimulatedOpenLoggerService {
     processBinaryDataAndSend(commandObject: any) {
         let binaryDataContainer: any = {};
         let binaryOffset = 0;
-        for (let instrument in this.trigger.targets) {
-            if (instrument === 'osc' && commandObject[instrument] != undefined) {
-                binaryDataContainer['osc'] = {};
-                for (let channel in commandObject[instrument]) {
-                    binaryDataContainer.osc[channel] = commandObject[instrument][channel][0].y;
-                    commandObject[instrument][channel][0].binaryOffset = binaryOffset;
-                    binaryOffset += commandObject[instrument][channel][0].binaryLength;
-                    delete commandObject[instrument][channel][0].y;
-                }
-            }
-            if (instrument === 'la' && commandObject[instrument] != undefined) {
-                binaryDataContainer['la'] = {};
-                let initialIteration = true;
-                for (let channel in commandObject[instrument]) {
-                    commandObject[instrument][channel][0].binaryOffset = binaryOffset;
-                    if (initialIteration) {
-                        initialIteration = false;
-                        binaryDataContainer.la[channel] = commandObject[instrument][channel][0].y;
-                        binaryOffset += commandObject[instrument][channel][0].binaryLength;
-                    }
-                    delete commandObject[instrument][channel][0].y;
-                }
-            }
-        }
 
         // note(andrew): if the container is empty then that means the commandObject instrument
         // is the logger, because the trigger doesn't get set when logging, and doesn't
