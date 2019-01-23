@@ -6,7 +6,7 @@ import { SimulatedDeviceHelperService } from '../simulated-device-helper.service
 export class SimulatedDaqLoggerService {
     private simulatedDeviceService: SimulatedDeviceHelperService;
 
-    private sampleFreq: number = 10e6;
+    private sampleFreq: number = 10e8;
     private delay: number = 0;
     private maxSampleCount: number = 1000;
     private averages: number[] = [1, 1, 1, 1, 1, 1, 1, 1];
