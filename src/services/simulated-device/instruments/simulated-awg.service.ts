@@ -17,6 +17,17 @@ export class SimulatedAwgService {
 
     }
 
+    getCurrentState(chan) {
+        return {
+            command: "getCurrentState",
+            actualSignalFreq: this.signalFreqs[chan],
+            actualVOffset: this.vOffsets[chan],
+            actualVpp: this.vpps[chan],
+            state: this.state,
+            waveType: this.signalTypes[chan]
+        };
+    }
+
     setArbitraryWaveform(chan) {
         return {
             statusCode: 0,
