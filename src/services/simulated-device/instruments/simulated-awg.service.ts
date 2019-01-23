@@ -11,6 +11,7 @@ export class SimulatedAwgService {
     private signalFreqs: number[] = [0, 0, 0, 0, 0, 0, 0, 0];
     private vpps: number[] = [0, 0, 0, 0, 0, 0, 0, 0];
     private vOffsets: number[] = [0, 0, 0, 0, 0, 0, 0, 0];
+    private state: 'idle' | 'stopped' | 'running' = 'idle';
 
     constructor(_simulatedDeviceService: SimulatedDeviceHelperService) {
         this.simulatedDeviceService = _simulatedDeviceService;
