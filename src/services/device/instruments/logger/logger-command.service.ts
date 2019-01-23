@@ -45,8 +45,7 @@ export class LoggerCommandService {
         return command;
     }
 
-    daqSetParametersJson(chans: number[], maxSampleCount: number, sampleFreq: number, startDelay: number,
-                                average: number, storageLocations: string[], uris: string[]): string {
+    daqSetParametersJson(chans: number[], maxSampleCount: number, sampleFreq: number, startDelay: number, storageLocation: string, uri: string, average: number): string {
 
         let command: any = {
             "log": {
@@ -55,6 +54,8 @@ export class LoggerCommandService {
                     "maxSampleCount": maxSampleCount,
                     "startDelay": startDelay,
                     "sampleFreq":sampleFreq,
+                    "storageLocation": storageLocation,
+                    "uri": uri,
                     "channels" : []
                 }
             }
@@ -64,9 +65,7 @@ export class LoggerCommandService {
             let channelSettings: any = {};
             
             channelSettings[chans[index]] = {
-                average,
-                storageLocation: storageLocations[index],
-                uri: uris[index]
+                average
             };
 
             command.log.daq.channels.push(channelSettings);
@@ -196,11 +195,9 @@ export class LoggerCommandService {
         return this.instrumentRef._genericResponseHandler(command);
     }
 
-    daqSetParameters(chans: number[], maxSampleCount: number, sampleFreq: number, startDelay: number,
-        average: number, storageLocations: string[], uris: string[]): Observable<any> {
+    daqSetParameters(chans: number[], maxSampleCount: number, sampleFreq: number, startDelay: number, storageLocation: string, uri: string, average: number): Observable<any> {
 
-        let command = this.daqSetParametersJson(chans, maxSampleCount, sampleFreq, startDelay, average,
-            storageLocations, uris);
+        let command = this.daqSetParametersJson(chans, maxSampleCount, sampleFreq, startDelay, storageLocation, uri, average);
 
         return this.instrumentRef._genericResponseHandler(command);
     }
