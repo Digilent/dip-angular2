@@ -7,7 +7,7 @@ import { SimulatedDeviceHelperService } from '../simulated-device-helper.service
 
 export class SimulatedAwgService {
     private simulatedDeviceService: SimulatedDeviceHelperService;
-    private signalTypes: string[] = ['', '', '', '', '', '', '', ''];
+    private signalTypes: string[] = ['none', 'none', 'none', 'none', 'none', 'none', 'none', 'none'];
     private signalFreqs: number[] = [0, 0, 0, 0, 0, 0, 0, 0];
     private vpps: number[] = [0, 0, 0, 0, 0, 0, 0, 0];
     private vOffsets: number[] = [0, 0, 0, 0, 0, 0, 0, 0];
