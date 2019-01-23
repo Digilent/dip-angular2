@@ -220,10 +220,12 @@ export class SimulatedDaqLoggerService {
 
         var now = Date.now();
         var T = now - this.timeOfLastRead;
-        this.timeOfLastRead = now;
 
         let sampleRate = this.sampleFreq || 6.25e9;
-        let numSamples = (sampleRate / 1e6) * (T / 1000);
+        let numSamples = Math.round((sampleRate / 1e6) * (T / 1000));
+        if (numSamples > 0) {
+            this.timeOfLastRead = now;
+        }
         let dt = 1e6 / sampleRate;
 
         let responseObj = {
