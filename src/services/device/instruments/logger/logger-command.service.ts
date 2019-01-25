@@ -45,7 +45,7 @@ export class LoggerCommandService {
         return command;
     }
 
-    daqSetParametersJson(chans: number[], maxSampleCount: number, sampleFreq: number, startDelay: number, storageLocation: string, uri: string, average: number): string {
+    daqSetParametersJson(chans: number[], maxSampleCount: number, sampleFreq: number, startDelay: number, storageLocation: string, uri: string, averages: number[]): string {
 
         let command: any = {
             "log": {
@@ -65,7 +65,7 @@ export class LoggerCommandService {
             let channelSettings: any = {};
             
             channelSettings[chans[index]] = {
-                average
+                average: averages[index]
             };
 
             command.log.daq.channels.push(channelSettings);
@@ -195,9 +195,9 @@ export class LoggerCommandService {
         return this.instrumentRef._genericResponseHandler(command);
     }
 
-    daqSetParameters(chans: number[], maxSampleCount: number, sampleFreq: number, startDelay: number, storageLocation: string, uri: string, average: number): Observable<any> {
+    daqSetParameters(chans: number[], maxSampleCount: number, sampleFreq: number, startDelay: number, storageLocation: string, uri: string, averages: number[]): Observable<any> {
 
-        let command = this.daqSetParametersJson(chans, maxSampleCount, sampleFreq, startDelay, storageLocation, uri, average);
+        let command = this.daqSetParametersJson(chans, maxSampleCount, sampleFreq, startDelay, storageLocation, uri, averages);
 
         return this.instrumentRef._genericResponseHandler(command);
     }
