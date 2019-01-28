@@ -10,8 +10,8 @@ export class SimulatedDaqLoggerService {
     private delay: number = 0;
     private maxSampleCount: number = 1000;
     private averages: number[] = [1, 1, 1, 1, 1, 1, 1, 1];
-    private storageLocations: string[] = ["ram", "ram", "ram", "ram", "ram", "ram", "ram", "ram"];
-    private uris: string[] = ["", "", "", "", "", "", "", ""];
+    private storageLocation: string = "ram";
+    private uri: string = "";
     private state: string = "stopped";
     private startIndex: number = 0;
     private timeOfLastRead: number = null;
@@ -27,9 +27,7 @@ export class SimulatedDaqLoggerService {
             if (chan) {
                 channels.push({
                     [(index + 1).toString()]: {
-                        average: this.averages[index],
-                        storageLocation: this.storageLocations[index],
-                        uri: this.uris[index]
+                        average: this.averages[index]
                     }
                 });
             }
@@ -45,6 +43,8 @@ export class SimulatedDaqLoggerService {
             maxSampleCount: -1,
             actualSampleFreq: this.sampleFreq,
             actualStartDelay: this.delay,
+            storageLocation: this.storageLocation,
+            uri: this.uri,
             channels: channels,
             wait: 0
         };
@@ -54,6 +54,8 @@ export class SimulatedDaqLoggerService {
         let maxSampleCount = this.maxSampleCount = commandObject.maxSampleCount;
         let actualSampleFreq = this.sampleFreq = commandObject.sampleFreq;
         let actualStartDelay = this.delay = commandObject.startDelay;
+        let storageLocation = this.storageLocation = commandObject.storageLocation;
+        let uri = this.uri = commandObject.uri;
 
         // select channels and set params
         this.selectedChannels = this.selectedChannels.map(() => false);
@@ -62,8 +64,6 @@ export class SimulatedDaqLoggerService {
             this.selectedChannels[chanNum - 1] = true;
 
             this.averages[chan - 1] = chan[chanNum].average;
-            this.storageLocations[chan - 1] = chan[chanNum].storageLocation;
-            this.uris[chan - 1] = chan[chanNum].uri;
         });
 
         return {
@@ -72,6 +72,8 @@ export class SimulatedDaqLoggerService {
             maxSampleCount,
             actualSampleFreq,
             actualStartDelay,
+            storageLocation,
+            uri,
             channels: commandObject.channels,
             wait: 0
         }
