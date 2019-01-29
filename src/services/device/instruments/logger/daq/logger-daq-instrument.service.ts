@@ -59,7 +59,7 @@ export class LoggerDaqInstrumentService extends GenericInstrumentService {
         return this.loggerCommandService.read(chans, startIndex, count);
     }
 
-    getCurrentState(instrument: LoggerInstruments, chans: number[]) {
+    getCurrentState() {
         return this.loggerCommandService.getCurrentState();
     }
 }
