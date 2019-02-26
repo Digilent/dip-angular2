@@ -94,11 +94,21 @@ export class FileService {
 
         return this.genericResponse(command);
     }
+
+    delete(location: string, paths: string | string[]): Observable<any> {
+        let command = {
+            file: []
+        };
+
+        let p = (typeof paths === 'string') ? [paths] : paths;
+        p.forEach(path => {
+            command.file.push({
                 command: 'delete',
                 type: location,
                 path: path
-            }]
-        };
+            })
+        });
+
         return this.genericResponse(command);
     }
 
