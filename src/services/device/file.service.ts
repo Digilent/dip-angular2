@@ -85,9 +85,15 @@ export class FileService {
         return this.genericResponse(command);
     }
 
-    delete(location: string, path: string): Observable<any> {
+    getCurrentState(): Observable<FileCurrentStateResponse> {
         let command = {
             file: [{
+                command: 'getCurrentState'
+            }]
+        };
+
+        return this.genericResponse(command);
+    }
                 command: 'delete',
                 type: location,
                 path: path
@@ -187,4 +193,17 @@ export class FileService {
         });
     }
 
+}
+
+/**
+ * FileCurrentStateReponse represents the documented 
+ * structure of a reponse to a file:getCurrentState command
+ */
+export interface FileCurrentStateResponse {
+    file: {
+        command: "getCurrentState",
+        statusCode: number,
+        state: "deleting" | "idle",
+        wait: number
+    }
 }
