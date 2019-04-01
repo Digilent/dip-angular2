@@ -90,6 +90,7 @@ export class GpioInstrumentService extends GenericInstrumentService {
                             return;
                         }
                     }
+
                     observer.next(data);
                     observer.complete();
 
@@ -104,4 +105,48 @@ export class GpioInstrumentService extends GenericInstrumentService {
         });
     }
 
+    getCurrentState(chans: Array<number>) {
+        const command = {
+            "gpio": {}
+        }
+
+        for (let chan of chans) {
+            command.gpio[chan] = [{
+                "command": "getCurrentState"
+            }];
+        }
+
+        return Observable.create((observer) => {
+            if (chans.length < 1) { observer.error("No channels specified") }
+
+            this.transport.writeRead(this.endpoint, JSON.stringify(command), 'json').subscribe(
+                (arrayBuffer) => {
+                    let data;
+                    try {
+                        data = JSON.parse(String.fromCharCode.apply(null, new Int8Array(arrayBuffer.slice(0))));
+                    }
+                    catch (e) {
+                        observer.error(e);
+                        return;
+                    }
+
+                    for (let i = 0; i < chans.length; i++) {
+                        if (data.gpio == undefined || data.gpio[chans[i]][0].statusCode > 0) {
+                            observer.error(data);
+                            return;
+                        }
+                    }
+                    
+                    observer.next(data);
+                    observer.complete();
+                },
+                (err) => {
+                    observer.error(err);
+                },
+                () => {
+                    observer.complete();
+                }
+            );
+        });
+    }
 }
