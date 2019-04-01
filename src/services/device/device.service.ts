@@ -381,11 +381,12 @@ export class DeviceService {
         return this._genericResponseHandler(command);
     }
 
-    wifiScan(adapter: string): Observable<any> {
+    wifiScan(adapter: string, force: boolean = true): Observable<any> {
         let command = {
             "device": [{
                 command: "wifiScan",
-                adapter: adapter
+                adapter: adapter,
+                force
             }]
         }
         return this._genericResponseHandler(command);
