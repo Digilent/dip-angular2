@@ -186,7 +186,7 @@ export class FileService {
                         observer.error(data);
                         return;
                     }
-                    if (data.file == undefined || data.file[0] == undefined || data.file[0].statusCode !== 0) {
+                    if (data.file == undefined || (data.file[0] !== undefined && data.file[0].statusCode !== 0) || (data.file[0] === undefined && data.file.statusCode !== 0)) {
                         observer.error(data);
                         return;
                     }

@@ -195,6 +195,12 @@ export class SimulatedOpenLoggerService {
                         type: 'flash',
                         wait: 0
                     }];
+            case 'filegetCurrentState':
+                return {
+                    command: "getCurrentState",
+                    statusCode: 0,
+                    wait: 0
+                };
 
             default:
                 return {
