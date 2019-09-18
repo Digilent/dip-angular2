@@ -237,11 +237,19 @@ export class DeviceManagerService {
 
     getLatestFirmwareVersionFromArray(firmwareVersionsArray: string[]) {
         firmwareVersionsArray.sort((a, b) => {
-            let aSplit = a.split('.');
-            let bSplit = b.split('.');
-            let aPriority = parseInt(aSplit[0]) * 1000000 + parseInt(aSplit[1]) * 1000 + parseInt(aSplit[2]);
-            let bPriority = parseInt(bSplit[0]) * 1000000 + parseInt(bSplit[1]) * 1000 + parseInt(bSplit[2]);
-            return bPriority - aPriority;
+            let [firstMaj, firstMin, firstPatch] = a.split('.');
+            let [secondMaj, secondMin, secondPatch] = b.split('.');
+
+            if (firstMaj < secondMaj) return 1;
+            else if (firstMaj > secondMaj) return -1;
+
+            if (firstMin < secondMin) return 1;
+            else if (firstMin > secondMin) return -1;
+
+            if (firstPatch < secondPatch) return 1;
+            else if (firstPatch > secondPatch) return -1;
+
+            return 0;
         });
         return firmwareVersionsArray[0];
     }
