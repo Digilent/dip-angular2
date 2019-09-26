@@ -74,10 +74,11 @@ export class CommandUtilityService {
 
             if (isNaN(parseInt(firstChar, 16))) {
                 let str = new TextDecoder('utf-8').decode(new Uint8Array(data.slice(0)));
-                
+                let response = JSON.parse(str);
+
                 observer.error({
                     message: 'json or bad packet',
-                    payload: data
+                    payload: response
                 });
                 return;
             }
