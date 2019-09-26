@@ -133,6 +133,13 @@ export class LoggerCommandService {
                 .flatMap((data) => {
                     return this.commandUtilityService.observableParseChunkedTransfer(data);
                 })
+                .retryWhen(errors => errors.map(err => {
+                    if (err.payload.log.daq.statusCode === 2684354570) { // todo(andrew): Make dictionary of known status codes. This one means no new data available
+                        return {}; // retry request
+                    }
+
+                    else throw err; // properly error
+                }))
                 .subscribe(
                     (data: {json: any, typedArray: Int16Array | Uint8Array}) => {
                         let returnObject = {

@@ -68,6 +68,7 @@ export class CommandUtilityService {
 
     observableParseChunkedTransfer(data: ArrayBuffer, typedArrayFormat?: 'i16' | 'u8'): Observable<any> {
         typedArrayFormat = typedArrayFormat == undefined ? 'i16' : typedArrayFormat;
+
         return Observable.create((observer) => {
             let firstChar = String.fromCharCode.apply(null, new Uint8Array(data.slice(0, 1)));
 
