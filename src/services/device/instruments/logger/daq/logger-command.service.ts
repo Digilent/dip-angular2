@@ -18,7 +18,7 @@ export class LoggerCommandService {
         this.commandUtilityService = new CommandUtilityService();
     }
 
-    setParametersJson(chans: number[], maxSampleCount: number, sampleFreq: number, startDelay: number, storageLocation: string, service: string, apiKey: string, uri: string, averages: number[]): string {
+    setParametersJson(chans: number[], maxSampleCount: number, sampleFreq: number, startDelay: number, storageLocation: string, logOnBoot: boolean, service: string, apiKey: string, uri: string, averages: number[]): string {
 
         let command: any = {
             "log": {
@@ -28,6 +28,7 @@ export class LoggerCommandService {
                     "startDelay": Math.round(startDelay * Math.pow(10, 12)),
                     "sampleFreq": Math.round(sampleFreq * 1000000),
                     "storageLocation": storageLocation,
+                    "logOnBoot": logOnBoot,
                     "service": service,
                     "key": apiKey,
                     "uri": uri,
@@ -108,9 +109,9 @@ export class LoggerCommandService {
         return command;
     }
 
-    setParameters(chans: number[], maxSampleCount: number, sampleFreq: number, startDelay: number, storageLocation: string, service: string, apiKey: string, uri: string, averages: number[]): Observable<any> {
+    setParameters(chans: number[], maxSampleCount: number, sampleFreq: number, startDelay: number, storageLocation: string, logOnBoot: boolean, service: string, apiKey: string, uri: string, averages: number[]): Observable<any> {
 
-        let command = this.setParametersJson(chans, maxSampleCount, sampleFreq, startDelay, storageLocation, service, apiKey, uri, averages);
+        let command = this.setParametersJson(chans, maxSampleCount, sampleFreq, startDelay, storageLocation, logOnBoot, service, apiKey, uri, averages);
 
         return this.instrumentRef._genericResponseHandler(command);
     }

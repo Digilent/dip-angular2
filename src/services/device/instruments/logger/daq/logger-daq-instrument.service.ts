@@ -43,8 +43,8 @@ export class LoggerDaqInstrumentService extends GenericInstrumentService {
         }
     }
 
-    setParameters(chans: number[], maxSampleCount: number, sampleFreq: number, startDelay: number, storageLocation: string, service: string, apiKey: string, uri: string, averages: number[], overflows: Array<'stop' | 'circular'>) {
-        return this.loggerCommandService.setParameters(chans, maxSampleCount, sampleFreq, startDelay, storageLocation, service, apiKey, uri, averages);
+    setParameters(chans: number[], maxSampleCount: number, sampleFreq: number, startDelay: number, storageLocation: string, logOnBoot: boolean, service: string, apiKey: string, uri: string, averages: number[], overflows: Array<'stop' | 'circular'>) {
+        return this.loggerCommandService.setParameters(chans, maxSampleCount, sampleFreq, startDelay, storageLocation, logOnBoot, service, apiKey, uri, averages);
     }
 
     run(instrument: LoggerInstruments, chans: number[]) {
